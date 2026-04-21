@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { FileText, Plus, LogOut } from 'lucide-react'
+import { FileText, Plus } from 'lucide-react'
+import { LogoutButton } from '@/components/logout-button'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -20,11 +21,7 @@ export default async function DashboardPage() {
           <span className="text-xl font-bold text-gray-900">Kwik</span>
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-500 hidden sm:block">{user.email}</span>
-            <form action="/auth/signout" method="post">
-              <Button variant="ghost" size="sm" type="submit">
-                <LogOut className="h-4 w-4" />
-              </Button>
-            </form>
+            <LogoutButton />
           </div>
         </div>
       </header>
