@@ -38,9 +38,10 @@ export async function sendQuoteByEmail(quoteId: string) {
     }) as any
   )
 
-  const appUrl = 'https://www.kwik-devis.fr'
+  const hdrs = await headers()
+  const host = hdrs.get('host') ?? 'www.kwik-devis.fr'
+  const appUrl = host.startsWith('localhost') ? `http://${host}` : `https://${host}`
   const publicUrl = `${appUrl}/q/${quote.public_token}`
-  console.error('DEBUG appUrl:', appUrl, 'publicUrl:', publicUrl)
 
   const validityFormatted = new Date(quote.validity_date).toLocaleDateString('fr-FR', {
     day: 'numeric',
