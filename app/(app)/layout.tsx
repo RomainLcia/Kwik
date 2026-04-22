@@ -11,11 +11,16 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   const { data: company } = await supabase
     .from('companies')
-    .select('id, name')
+    .select('id, name, subscription_status, stripe_customer_id')
     .eq('user_id', user.id)
     .single()
 
   if (!company) redirect('/onboarding')
+
+  // Bloquer l'accès si abonnement annulé ou en retard
+  if (['canceled', 'past_due'].includes(company.subscription_status ?? '')) {
+    redirect('/subscribe')
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
