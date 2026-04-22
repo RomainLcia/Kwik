@@ -80,7 +80,13 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
       </div>
 
       {/* Actions */}
-      <QuoteActions quoteId={id} status={quote.status} totalTTC={Number(quote.total_ttc)} />
+      <QuoteActions
+        quoteId={id}
+        status={quote.status}
+        totalTTC={Number(quote.total_ttc)}
+        clientEmail={quote.clients?.email ?? null}
+        publicToken={quote.public_token}
+      />
 
       {/* Client */}
       {quote.clients && (

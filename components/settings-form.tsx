@@ -146,6 +146,24 @@ export function SettingsForm({ company }: { company: Company }) {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader><CardTitle className="text-base">Mentions légales (PDF)</CardTitle></CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <Label htmlFor="legal_mentions">Pied de page des devis et factures</Label>
+            <textarea
+              id="legal_mentions"
+              name="legal_mentions"
+              defaultValue={company.legal_mentions ?? ''}
+              placeholder="Ex: SARL Dupont — SIRET 123 456 789 00012 — Capital 1 000 €"
+              rows={2}
+              className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
+            />
+            <p className="text-xs text-gray-400">Apparaît en bas de chaque PDF. Si vide, les infos de votre profil sont utilisées automatiquement.</p>
+          </div>
+        </CardContent>
+      </Card>
+
       {success && <p className="text-sm text-green-600 bg-green-50 rounded-md px-3 py-2">Profil mis à jour ✓</p>}
 
       <Button type="submit" className="w-full" disabled={loading}>
