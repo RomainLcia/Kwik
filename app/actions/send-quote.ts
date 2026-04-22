@@ -40,6 +40,7 @@ export async function sendQuoteByEmail(quoteId: string) {
 
   const appUrl = 'https://www.kwik-devis.fr'
   const publicUrl = `${appUrl}/q/${quote.public_token}`
+  console.error('DEBUG appUrl:', appUrl, 'publicUrl:', publicUrl)
 
   const validityFormatted = new Date(quote.validity_date).toLocaleDateString('fr-FR', {
     day: 'numeric',
