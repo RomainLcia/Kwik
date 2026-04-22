@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { Download } from 'lucide-react'
+import { QuoteSignatureForm } from '@/components/quote-signature-form'
+import { Download, CheckCircle, XCircle } from 'lucide-react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
@@ -188,6 +189,33 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
               )}
             </CardContent>
           </Card>
+        )}
+
+        {/* Signature */}
+        {(quote.status === 'viewed' || quote.status === 'sent') && (
+          <div className="mb-6">
+            <QuoteSignatureForm quoteId={quote.id} />
+          </div>
+        )}
+
+        {quote.status === 'accepted' && (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-5 text-center mb-6">
+            <CheckCircle className="h-8 w-8 text-green-500 mx-auto mb-2" />
+            <p className="font-bold text-green-800">Devis accepté</p>
+            {quote.signature_data && (
+              <p className="text-sm text-green-600 mt-1">
+                Signé par {(quote.signature_data as any).name} le{' '}
+                {format(new Date((quote.signature_data as any).signed_at), 'd MMMM yyyy à HH:mm', { locale: fr })}
+              </p>
+            )}
+          </div>
+        )}
+
+        {quote.status === 'rejected' && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-5 text-center mb-6">
+            <XCircle className="h-8 w-8 text-red-400 mx-auto mb-2" />
+            <p className="font-bold text-red-800">Devis refusé</p>
+          </div>
         )}
 
         <p className="text-center text-xs text-gray-400 mt-6">Devis envoyé via Kwik</p>
