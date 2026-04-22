@@ -36,7 +36,7 @@ export async function GET(
     }) as any
   )
 
-  return new NextResponse(buffer, {
+  return new NextResponse(new Uint8Array(buffer), {
     headers: {
       'Content-Type': 'application/pdf',
       'Content-Disposition': `inline; filename="devis-${quote.number}.pdf"`,
