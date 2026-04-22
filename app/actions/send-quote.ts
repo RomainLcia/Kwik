@@ -7,6 +7,7 @@ import { renderToBuffer } from '@react-pdf/renderer'
 import { QuoteDocument } from '@/components/quote-pdf'
 import { Resend } from 'resend'
 import { revalidatePath } from 'next/cache'
+import { headers } from 'next/headers'
 
 export async function sendQuoteByEmail(quoteId: string) {
   const supabase = await createClient()
