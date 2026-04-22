@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import { NextResponse } from 'next/server'
 
 export async function POST() {
@@ -17,6 +17,7 @@ export async function POST() {
     return NextResponse.json({ error: 'Aucun abonnement trouvé' }, { status: 400 })
   }
 
+  const stripe = getStripe()
   const session = await stripe.billingPortal.sessions.create({
     customer: company.stripe_customer_id,
     return_url: 'https://www.kwik-devis.fr/subscribe',

@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import { NextResponse } from 'next/server'
 
 export async function POST() {
@@ -15,6 +15,7 @@ export async function POST() {
 
   if (!company) return NextResponse.json({ error: 'Entreprise introuvable' }, { status: 400 })
 
+  const stripe = getStripe()
   let customerId = company.stripe_customer_id
 
   if (!customerId) {
