@@ -11,12 +11,13 @@ export default async function SubscribePage() {
 
   const { data: company } = await supabase
     .from('companies')
-    .select('subscription_status')
+    .select('subscription_status, stripe_customer_id')
     .eq('user_id', user.id)
     .single()
 
   const status = company?.subscription_status
-  const isActive = status === 'active' || status === 'trial'
+  const hasStripeCustomer = !!company?.stripe_customer_id
+  const isActive = (status === 'active' || status === 'trial') && hasStripeCustomer
 
   const features = [
     'Devis illimités',
