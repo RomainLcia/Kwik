@@ -38,7 +38,7 @@ export async function sendQuoteByEmail(quoteId: string) {
     }) as any
   )
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.kwik-devis.fr'
+  const appUrl = 'https://www.kwik-devis.fr'
   const publicUrl = `${appUrl}/q/${quote.public_token}`
 
   const validityFormatted = new Date(quote.validity_date).toLocaleDateString('fr-FR', {
