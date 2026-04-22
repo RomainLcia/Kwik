@@ -138,15 +138,15 @@ export function QuoteForm({
   }
 
   function addCatalogItem(item: CatalogItem) {
-    const line = calcLine(newLine(lines.length))
-    setLines(prev => [...prev, {
-      ...line,
+    const line = calcLine({
+      ...newLine(lines.length),
       label: item.label,
       description: item.description ?? '',
       price_ht: item.default_price_ht,
       unit: item.default_unit,
       vat_rate: item.default_vat_rate,
-    }])
+    })
+    setLines(prev => [...prev, line])
     setCatalogOpen(false)
   }
 
