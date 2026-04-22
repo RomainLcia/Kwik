@@ -32,7 +32,7 @@ export async function GET(
       lines: lines ?? [],
       company,
       client: quote.clients ?? null,
-    })
+    }) as any
   )
 
   return new NextResponse(buffer, {

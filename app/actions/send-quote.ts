@@ -35,7 +35,7 @@ export async function sendQuoteByEmail(quoteId: string) {
       lines: lines ?? [],
       company,
       client: quote.clients,
-    })
+    }) as any
   )
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://kwik.vercel.app'
