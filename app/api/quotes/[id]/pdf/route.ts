@@ -27,11 +27,23 @@ export async function GET(
 
   if (!quote) return new NextResponse('Non trouvé', { status: 404 })
 
+  // Convertit le logo en base64 pour react-pdf
+  let logoDataUrl: string | null = null
+  if (company.logo_url) {
+    try {
+      const res = await fetch(company.logo_url)
+      const arrayBuffer = await res.arrayBuffer()
+      const base64 = Buffer.from(arrayBuffer).toString('base64')
+      const contentType = res.headers.get('content-type') ?? 'image/png'
+      logoDataUrl = `data:${contentType};base64,${base64}`
+    } catch {}
+  }
+
   const buffer = await renderToBuffer(
     React.createElement(QuoteDocument, {
       quote,
       lines: lines ?? [],
-      company,
+      company: { ...company, logo_url: logoDataUrl },
       client: quote.clients ?? null,
     }) as any
   )

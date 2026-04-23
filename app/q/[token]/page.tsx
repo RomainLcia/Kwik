@@ -26,7 +26,7 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
   const [{ data: lines }, { data: company }] = await Promise.all([
     supabase.from('quote_lines').select('*').eq('quote_id', quote.id).order('position'),
     supabase.from('companies')
-      .select('name, address_street, address_zip, address_city, phone, contact_email, vat_applicable')
+      .select('name, address_street, address_zip, address_city, phone, contact_email, vat_applicable, logo_url')
       .eq('id', quote.company_id).single(),
   ])
 
@@ -55,6 +55,14 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
           <div>
             {company && (
               <div>
+                {company.logo_url && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={company.logo_url}
+                    alt={company.name}
+                    className="h-12 w-auto max-w-[180px] object-contain mb-2"
+                  />
+                )}
                 <h1 className="text-xl font-bold text-gray-900">{company.name}</h1>
                 {company.address_street && (
                   <p className="text-sm text-gray-500">{company.address_street}</p>

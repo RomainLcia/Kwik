@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer'
 
 export type PDFCompany = {
   name: string
@@ -12,6 +12,7 @@ export type PDFCompany = {
   vat_applicable: boolean
   vat_number: string | null
   legal_mentions: string | null
+  logo_url: string | null
 }
 
 export type PDFClient = {
@@ -75,6 +76,7 @@ const s = StyleSheet.create({
   row: { flexDirection: 'row' },
   headerLeft: { flex: 1 },
   headerRight: { alignItems: 'flex-end' },
+  logoImg: { maxWidth: 120, maxHeight: 48, marginBottom: 6 },
   companyName: { fontSize: 14, fontFamily: 'Helvetica-Bold', marginBottom: 4 },
   companyLine: { fontSize: 8.5, color: gray, marginBottom: 2 },
   docTitle: { fontSize: 24, fontFamily: 'Helvetica-Bold', color: blue, marginBottom: 5 },
@@ -152,6 +154,9 @@ export function QuoteDocument({ quote, lines, company, client }: QuoteDocumentPr
         {/* En-tete */}
         <View style={s.row}>
           <View style={s.headerLeft}>
+            {company.logo_url ? (
+              <Image src={company.logo_url} style={s.logoImg} />
+            ) : null}
             <Text style={s.companyName}>{company.name}</Text>
             {company.legal_form ? <Text style={s.companyLine}>{company.legal_form}</Text> : null}
             {company.address_street ? <Text style={s.companyLine}>{company.address_street}</Text> : null}
