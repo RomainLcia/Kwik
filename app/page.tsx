@@ -29,10 +29,10 @@ export default function LandingPage() {
         </div>
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
           Le devis en 3 minutes<br />
-          <span className="text-blue-600">depuis votre téléphone</span>
+          <span className="text-blue-600">où que vous soyez</span>
         </h1>
         <p className="text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed">
-          Créez et envoyez un devis professionnel directement depuis le chantier. PDF brandé, signature électronique, suivi en temps réel.
+          Pour tous les indépendants et petites entreprises qui vendent des prestations : devis pro, PDF brandé, signature électronique et suivi en temps réel — depuis votre téléphone.
         </p>
         <div className="flex justify-center">
           <Link href="/signup">
@@ -93,7 +93,7 @@ export default function LandingPage() {
               </div>
               <div className="p-4">
                 <div className="bg-blue-600 rounded-t-xl p-4 text-white text-center mb-0">
-                  <p className="font-bold text-sm">Dupont Peinture</p>
+                  <p className="font-bold text-sm">Martin Conseil</p>
                   <p className="text-xs opacity-80 mt-0.5">vous a envoyé un devis</p>
                 </div>
                 <div className="border border-t-0 border-gray-100 rounded-b-xl p-4 space-y-3">
@@ -152,9 +152,9 @@ export default function LandingPage() {
         <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">De la visite à la signature en 3 minutes</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { step: '1', icon: Smartphone, title: 'Créez le devis sur place', desc: 'Sélectionnez vos prestations depuis votre catalogue, ajustez les quantités. Le total se calcule automatiquement.' },
-            { step: '2', icon: Send, title: 'Envoyez par email', desc: 'Un email pro avec le PDF en pièce jointe part instantanément à votre client depuis votre adresse.' },
-            { step: '3', icon: CheckCircle, title: 'Le client signe en ligne', desc: 'Votre client consulte et signe le devis depuis son téléphone, sans créer de compte. Vous êtes notifié.' },
+            { step: '1', icon: Smartphone, title: 'Créez le devis en 3 minutes', desc: 'Sélectionnez vos prestations depuis votre catalogue, ajustez les quantités. Le total se calcule automatiquement.' },
+            { step: '2', icon: Send, title: 'Envoyez par email', desc: 'Un email pro avec le PDF en pièce jointe part instantanément à votre client, depuis n\'importe où.' },
+            { step: '3', icon: CheckCircle, title: 'Le client signe en ligne', desc: 'Votre client consulte et signe le devis depuis son téléphone, sans créer de compte. Vous êtes notifié immédiatement.' },
           ].map(({ step, icon: Icon, title, desc }) => (
             <div key={step} className="relative">
               <div className="flex items-center gap-4 mb-4">
@@ -176,10 +176,10 @@ export default function LandingPage() {
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">Pourquoi Kwik ?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
-              { icon: Clock, title: 'Signez avant la concurrence', desc: 'Le premier prestataire à envoyer le devis emporte le chantier 6 fois sur 10. Kwik vous met toujours en tête.' },
-              { icon: Zap, title: 'Aucune formation nécessaire', desc: 'Interface pensée pour le terrain. Prise en main en 10 minutes, même sans expérience des logiciels.' },
+              { icon: Clock, title: 'Signez avant la concurrence', desc: 'Le premier prestataire à envoyer le devis l\'emporte 6 fois sur 10. Kwik vous met toujours en tête, où que vous soyez.' },
+              { icon: Zap, title: 'Aucune formation nécessaire', desc: 'Interface pensée pour les indépendants. Prise en main en 10 minutes, quel que soit votre métier.' },
               { icon: FileText, title: 'Documents 100% conformes', desc: 'Mentions légales, TVA, SIRET, conditions de paiement : tout est inclus automatiquement selon votre profil.' },
-              { icon: Euro, title: '10× moins cher que les concurrents', desc: 'Tolteck, Obat, Mediabt : 50-100€/mois. Kwik : 19€/mois. Mêmes devis pro, sans les fonctions inutiles.' },
+              { icon: Euro, title: 'Pour tous les métiers de prestation', desc: 'Photographe, coach, paysagiste, graphiste, pisciniste, consultant… Si vous vendez des prestations, Kwik est fait pour vous.' },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="bg-white rounded-2xl p-6 flex gap-4">
                 <div className="bg-blue-50 rounded-xl p-3 h-fit">
@@ -237,7 +237,7 @@ export default function LandingPage() {
           Votre prochain devis part en 3 minutes.
         </h2>
         <p className="text-blue-100 mb-10 text-lg max-w-xl mx-auto">
-          Rejoignez les artisans qui ne laissent plus un prospect partir sans devis dans les mains.
+          Rejoignez les indépendants et petites entreprises qui ne laissent plus un prospect partir sans devis.
         </p>
         <Link href="/signup">
           <Button size="lg" variant="secondary" className="text-base px-10 py-6">

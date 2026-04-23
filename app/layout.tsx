@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Kwik — Devis pro en 3 minutes",
-  description: "Créez et envoyez des devis professionnels en moins de 3 minutes depuis votre téléphone.",
+  description: "Créez et envoyez des devis professionnels en moins de 3 minutes. Pour tous les indépendants et petites entreprises qui vendent des prestations.",
 };
 
 export default function RootLayout({
