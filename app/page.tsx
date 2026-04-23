@@ -41,7 +41,7 @@ export default function LandingPage() {
             </Button>
           </Link>
         </div>
-        <p className="text-sm text-gray-400 mt-4">Aucune carte bancaire · Annulable à tout moment</p>
+        <p className="text-sm text-gray-400 mt-4">14 jours gratuits · Annulable à tout moment</p>
       </section>
 
       {/* Mockup app */}
