@@ -32,16 +32,22 @@ export default function LandingPage() {
           où que vous soyez
         </h1>
         <p className="text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed">
-          Pour tous les indépendants et petites entreprises qui vendent des prestations : devis pro, PDF brandé, signature électronique et suivi en temps réel — depuis votre téléphone.
+          Pour tous les indépendants et petites entreprises qui vendent des prestations : devis pro, PDF brandé, signature électronique, conversion en facture et suivi en temps réel — depuis votre téléphone.
         </p>
-        <div className="flex justify-center">
+        <div className="flex flex-col items-center gap-3">
           <Link href="/signup">
             <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-base px-8 py-6">
               Commencer gratuitement <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </Link>
+          <p className="text-sm text-gray-400">
+            Déjà un compte ?{' '}
+            <Link href="/login" className="text-blue-600 hover:underline font-medium">
+              Se connecter
+            </Link>
+          </p>
         </div>
-        <p className="text-sm text-gray-400 mt-4">14 jours gratuits · Annulable à tout moment</p>
+        <p className="text-sm text-gray-400 mt-2">14 jours gratuits · Annulable à tout moment</p>
       </section>
 
       {/* Mockup app */}
@@ -154,7 +160,7 @@ export default function LandingPage() {
           {[
             { step: '1', icon: Smartphone, title: 'Créez le devis en 3 minutes', desc: 'Sélectionnez vos prestations depuis votre catalogue, ajustez les quantités. Le total se calcule automatiquement.' },
             { step: '2', icon: Send, title: 'Envoyez par email', desc: 'Un email pro avec le PDF en pièce jointe part instantanément à votre client, depuis n\'importe où.' },
-            { step: '3', icon: CheckCircle, title: 'Le client signe en ligne', desc: 'Votre client consulte et signe le devis depuis son téléphone, sans créer de compte. Vous êtes notifié immédiatement.' },
+            { step: '3', icon: CheckCircle, title: 'Le client signe en ligne', desc: 'Votre client consulte et signe le devis depuis son téléphone, sans créer de compte. Vous êtes notifié immédiatement, et convertissez le devis en facture en un clic.' },
           ].map(({ step, icon: Icon, title, desc }) => (
             <div key={step} className="relative">
               <div className="flex items-center gap-4 mb-4">
@@ -178,7 +184,7 @@ export default function LandingPage() {
             {[
               { icon: Clock, title: 'Signez avant la concurrence', desc: 'Le premier prestataire à envoyer le devis l\'emporte 6 fois sur 10. Kwik vous met toujours en tête, où que vous soyez.' },
               { icon: Zap, title: 'Aucune formation nécessaire', desc: 'Interface pensée pour les indépendants. Prise en main en 10 minutes, quel que soit votre métier.' },
-              { icon: FileText, title: 'Documents 100% conformes', desc: 'Mentions légales, TVA, SIRET, conditions de paiement : tout est inclus automatiquement selon votre profil.' },
+              { icon: FileText, title: 'Devis → Facture en un clic', desc: 'Une fois le devis signé, convertissez-le en facture en un clic. Pas de ressaisie, pas d\'erreur, tout est prêt à envoyer.' },
               { icon: Euro, title: 'Pour tous les métiers de prestation', desc: 'Photographe, coach, paysagiste, graphiste, pisciniste, consultant… Si vous vendez des prestations, Kwik est fait pour vous.' },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="bg-white rounded-2xl p-6 flex gap-4">
