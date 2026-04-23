@@ -117,14 +117,24 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Écran 3 — Signature */}
+            {/* Écran 3 — Devis accepté + conversion facture */}
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
               <div className="bg-green-600 px-4 py-3">
-                <p className="text-white text-xs font-semibold">Signature client</p>
+                <p className="text-white text-xs font-semibold">Devis accepté !</p>
               </div>
               <div className="p-4 space-y-3">
-                <div className="space-y-1">
-                  <p className="text-xs text-gray-400">Prestations</p>
+                <div className="bg-green-50 border border-green-200 rounded-lg px-3 py-2 flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs font-semibold text-green-800">Signé par Martin Dupont</p>
+                    <p className="text-xs text-green-600">aujourd&apos;hui à 14h32</p>
+                  </div>
+                </div>
+                <div className="border-t pt-2 flex justify-between">
+                  <span className="text-xs text-gray-500">Total TTC</span>
+                  <span className="text-sm font-bold text-blue-600">1 950 €</span>
+                </div>
+                <div className="space-y-1.5">
                   {['Peinture mur 2 couches', 'Préparation surface', 'Protection sol'].map(l => (
                     <div key={l} className="flex items-center gap-2">
                       <CheckCircle className="h-3 w-3 text-green-500 flex-shrink-0" />
@@ -132,19 +142,11 @@ export default function LandingPage() {
                     </div>
                   ))}
                 </div>
-                <div className="border-t pt-2 flex justify-between">
-                  <span className="text-xs text-gray-500">Total TTC</span>
-                  <span className="text-sm font-bold text-blue-600">1 950 €</span>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-3 space-y-2">
-                  <div className="bg-white border border-gray-200 rounded px-2 py-1.5 text-xs text-gray-700">Martin Dupont</div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 bg-blue-600 rounded-sm flex-shrink-0" />
-                    <span className="text-xs text-gray-600">J&apos;accepte ce devis</span>
+                <div className="border-t pt-3 space-y-2">
+                  <div className="bg-blue-600 text-white text-center text-xs font-semibold py-2 rounded-lg flex items-center justify-center gap-1">
+                    <FileText className="h-3 w-3" /> Convertir en facture →
                   </div>
-                </div>
-                <div className="bg-green-600 text-white text-center text-xs font-semibold py-2 rounded-lg flex items-center justify-center gap-1">
-                  <CheckCircle className="h-3 w-3" /> Devis accepté !
+                  <p className="text-xs text-gray-400 text-center">Facture générée en un clic</p>
                 </div>
               </div>
             </div>
