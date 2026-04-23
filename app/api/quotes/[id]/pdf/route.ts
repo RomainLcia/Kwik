@@ -36,7 +36,9 @@ export async function GET(
       const base64 = Buffer.from(arrayBuffer).toString('base64')
       const contentType = res.headers.get('content-type') ?? 'image/png'
       logoDataUrl = `data:${contentType};base64,${base64}`
-    } catch {}
+    } catch (err) {
+      console.error('Logo fetch error:', err)
+    }
   }
 
   const buffer = await renderToBuffer(
