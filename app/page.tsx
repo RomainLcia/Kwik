@@ -29,7 +29,7 @@ export default function LandingPage() {
         </div>
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
           Le devis en 3 minutes<br />
-          <span className="text-blue-600">où que vous soyez</span>
+          où que vous soyez
         </h1>
         <p className="text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed">
           Pour tous les indépendants et petites entreprises qui vendent des prestations : devis pro, PDF brandé, signature électronique et suivi en temps réel — depuis votre téléphone.
