@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Upload, X } from 'lucide-react'
+// Button import kept for the rest of the form
 
 type Company = {
   id: string
@@ -153,13 +154,12 @@ export function SettingsForm({ company }: { company: Company }) {
                 className="hidden"
                 id="logo-upload"
               />
-              <label htmlFor="logo-upload">
-                <Button type="button" variant="outline" size="sm" disabled={logoLoading} asChild>
-                  <span className="cursor-pointer">
-                    <Upload className="h-4 w-4 mr-2" />
-                    {logoLoading ? 'Envoi en cours...' : 'Importer un logo'}
-                  </span>
-                </Button>
+              <label
+                htmlFor="logo-upload"
+                className={`inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors ${logoLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              >
+                <Upload className="h-4 w-4" />
+                {logoLoading ? 'Envoi en cours...' : 'Importer un logo'}
               </label>
               <p className="text-xs text-gray-400 mt-1.5">PNG, JPG ou WebP — 2 Mo max</p>
               <p className="text-xs text-gray-400">Apparaît en haut du devis et de la facture.</p>
