@@ -76,7 +76,7 @@ const s = StyleSheet.create({
   row: { flexDirection: 'row' },
   headerLeft: { flex: 1 },
   headerRight: { alignItems: 'flex-end' },
-  logoImg: { width: 120, height: 48, marginBottom: 6 },
+  logoImg: { width: 140, marginBottom: 6 },
   companyName: { fontSize: 14, fontFamily: 'Helvetica-Bold', marginBottom: 4 },
   companyLine: { fontSize: 8.5, color: gray, marginBottom: 2 },
   docTitle: { fontSize: 24, fontFamily: 'Helvetica-Bold', color: blue, marginBottom: 5 },
