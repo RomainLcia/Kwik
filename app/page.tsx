@@ -34,15 +34,10 @@ export default function LandingPage() {
         <p className="text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed">
           Créez et envoyez un devis professionnel directement depuis le chantier. PDF brandé, signature électronique, suivi en temps réel.
         </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <div className="flex justify-center">
           <Link href="/signup">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-base px-8 py-6 w-full sm:w-auto">
+            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-base px-8 py-6">
               Commencer gratuitement <ArrowRight className="h-4 w-4 ml-2" />
-            </Button>
-          </Link>
-          <Link href="#demo">
-            <Button size="lg" variant="outline" className="text-base px-8 py-6 w-full sm:w-auto">
-              Voir la démo
             </Button>
           </Link>
         </div>
