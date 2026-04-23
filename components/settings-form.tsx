@@ -149,7 +149,7 @@ export function SettingsForm({ company }: { company: Company }) {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/png,image/jpeg,image/jpg,image/webp"
+                accept="image/png,image/jpeg,image/jpg"
                 onChange={handleLogoUpload}
                 className="hidden"
                 id="logo-upload"
@@ -161,7 +161,7 @@ export function SettingsForm({ company }: { company: Company }) {
                 <Upload className="h-4 w-4" />
                 {logoLoading ? 'Envoi en cours...' : 'Importer un logo'}
               </label>
-              <p className="text-xs text-gray-400 mt-1.5">PNG, JPG ou WebP — 2 Mo max (pas de SVG)</p>
+              <p className="text-xs text-gray-400 mt-1.5">PNG ou JPG uniquement — 2 Mo max</p>
               <p className="text-xs text-gray-400">Apparaît en haut du devis et de la facture.</p>
             </div>
           </div>
