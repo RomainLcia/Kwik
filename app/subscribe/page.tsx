@@ -39,9 +39,9 @@ export default async function SubscribePage() {
 
       <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
         <div className="text-center mb-6">
-          <span className="text-4xl font-bold text-gray-900">19 €</span>
+          <span className="text-4xl font-bold text-gray-900">19,99 €</span>
           <span className="text-gray-500">/mois</span>
-          <p className="text-sm text-blue-600 mt-1 font-medium">14 jours gratuits, sans CB requise</p>
+          <p className="text-sm text-blue-600 mt-1 font-medium">14 jours gratuits</p>
         </div>
 
         <ul className="space-y-3 mb-6">

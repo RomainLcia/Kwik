@@ -25,7 +25,7 @@ export default function LandingPage() {
       <section className="max-w-5xl mx-auto px-4 pt-16 pb-12 text-center">
         <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 text-sm font-medium px-4 py-1.5 rounded-full mb-8">
           <Star className="h-3.5 w-3.5 fill-blue-700" />
-          14 jours gratuits · Sans carte bancaire
+          14 jours gratuits
         </div>
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
           Le devis en 3 minutes<br />
@@ -202,11 +202,11 @@ export default function LandingPage() {
         <div className="max-w-sm mx-auto bg-white border-2 border-blue-600 rounded-2xl p-8 shadow-lg">
           <p className="font-semibold text-gray-500 mb-2">Plan Solo</p>
           <div className="flex items-baseline justify-center gap-1 mb-2">
-            <span className="text-5xl font-bold text-gray-900">19</span>
+            <span className="text-5xl font-bold text-gray-900">19,99</span>
             <span className="text-2xl text-gray-900">€</span>
             <span className="text-gray-400">/mois</span>
           </div>
-          <p className="text-sm text-blue-600 font-medium mb-8">14 jours gratuits, sans CB requise</p>
+          <p className="text-sm text-blue-600 font-medium mb-8">14 jours gratuits</p>
           <ul className="space-y-3 text-left mb-8">
             {[
               'Devis illimités',
@@ -244,7 +244,7 @@ export default function LandingPage() {
             Essayer gratuitement — 14 jours
           </Button>
         </Link>
-        <p className="text-blue-200 text-sm mt-4">Sans carte bancaire · Sans engagement</p>
+        <p className="text-blue-200 text-sm mt-4">14 jours gratuits · Sans engagement</p>
       </section>
 
       {/* Footer */}

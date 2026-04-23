@@ -17,8 +17,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   if (!company) redirect('/onboarding')
 
-  // Bloquer l'accès si abonnement annulé ou en retard
-  if (['canceled', 'past_due'].includes(company.subscription_status ?? '')) {
+  // Bloquer l'accès si pas d'abonnement Stripe actif
+  const status = company.subscription_status
+  const hasStripe = !!company.stripe_customer_id
+  const allowed = (status === 'active' || status === 'trial') && hasStripe
+  if (!allowed) {
     redirect('/subscribe')
   }
 

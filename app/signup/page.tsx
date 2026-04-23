@@ -50,7 +50,7 @@ export default function SignupPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="text-2xl font-bold text-gray-900">Kwik</Link>
-          <p className="text-gray-500 mt-1 text-sm">14 jours gratuits · Sans CB</p>
+          <p className="text-gray-500 mt-1 text-sm">14 jours gratuits</p>
         </div>
 
         <Card>
