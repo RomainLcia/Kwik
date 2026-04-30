@@ -81,17 +81,14 @@ export default async function DashboardPage() {
     },
   ]
 
-  const hour = now.getHours()
-  const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir'
-
   return (
     <div className="max-w-5xl mx-auto px-6 py-8">
 
       {/* Header */}
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <p className="text-sm text-gray-400 mb-1 capitalize">{format(now, 'EEEE d MMMM yyyy', { locale: fr })}</p>
-          <h1 className="text-2xl font-bold text-gray-900">{greeting}, {company.name} 👋</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
+          <p className="text-sm text-gray-400 mt-1 capitalize">{format(now, 'EEEE d MMMM yyyy', { locale: fr })}</p>
         </div>
         <NewQuoteButton />
       </div>
