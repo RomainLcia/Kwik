@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { QuoteStatusBadge } from '@/components/quote-status-badge'
-import { Plus, FileText } from 'lucide-react'
+import { NewQuoteButton } from '@/components/new-quote-button'
+import { FileText } from 'lucide-react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
@@ -52,9 +53,7 @@ export default async function QuotesPage({
           <h1 className="text-2xl font-bold text-gray-900">Devis</h1>
           <p className="text-gray-500 text-sm mt-1">{quotes?.length ?? 0} devis</p>
         </div>
-        <Link href="/quotes/new">
-          <Button><Plus className="h-4 w-4 mr-2" />Nouveau devis</Button>
-        </Link>
+        <NewQuoteButton />
       </div>
 
       {/* Filtres statut */}
