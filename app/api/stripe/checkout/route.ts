@@ -33,6 +33,7 @@ export async function POST() {
     payment_method_types: ['card'],
     line_items: [{ price: process.env.STRIPE_PRICE_ID!, quantity: 1 }],
     subscription_data: { trial_period_days: 14 },
+    metadata: { company_id: company.id },
     success_url: 'https://www.kwik-devis.fr/dashboard?subscribed=true',
     cancel_url: 'https://www.kwik-devis.fr/subscribe',
   })

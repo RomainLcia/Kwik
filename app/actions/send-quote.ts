@@ -19,7 +19,7 @@ export async function sendQuoteByEmail(quoteId: string) {
 
   const [{ data: quote }, { data: lines }] = await Promise.all([
     supabase.from('quotes')
-      .select('*, clients(name, email, phone, address_street, address_zip, address_city), public_token')
+      .select('*, clients(name, email, phone, address_street, address_zip, address_city)')
       .eq('id', quoteId)
       .eq('company_id', company.id)
       .single(),

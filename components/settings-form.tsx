@@ -30,18 +30,20 @@ export function SettingsForm({ company }: { company: Company }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [saveError, setSaveError] = useState('')
   const [vatApplicable, setVatApplicable] = useState(company.vat_applicable)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
     setSuccess(false)
+    setSaveError('')
 
     const form = e.currentTarget
     const getValue = (name: string) => (form.elements.namedItem(name) as HTMLInputElement)?.value || null
 
     const supabase = createClient()
-    await supabase.from('companies').update({
+    const { error: updateError } = await supabase.from('companies').update({
       name: getValue('name') ?? company.name,
       siret: getValue('siret'),
       legal_form: getValue('legal_form'),
@@ -59,8 +61,12 @@ export function SettingsForm({ company }: { company: Company }) {
     }).eq('id', company.id)
 
     setLoading(false)
-    setSuccess(true)
-    router.refresh()
+    if (updateError) {
+      setSaveError('Une erreur est survenue. Veuillez réessayer.')
+    } else {
+      setSuccess(true)
+      router.refresh()
+    }
   }
 
   return (
@@ -165,6 +171,7 @@ export function SettingsForm({ company }: { company: Company }) {
       </Card>
 
       {success && <p className="text-sm text-green-600 bg-green-50 rounded-md px-3 py-2">Profil mis à jour ✓</p>}
+      {saveError && <p className="text-sm text-red-600 bg-red-50 rounded-md px-3 py-2">{saveError}</p>}
 
       <Button type="submit" className="w-full" disabled={loading}>
         {loading ? 'Enregistrement...' : 'Sauvegarder les modifications'}

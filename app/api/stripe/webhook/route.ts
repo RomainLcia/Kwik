@@ -18,13 +18,18 @@ export async function POST(req: NextRequest) {
 
   const supabase = createServiceClient()
 
+  // checkout.session.completed : on s'assure juste que stripe_customer_id est bien enregistré.
+  // Le statut réel (trial/active) est géré par customer.subscription.created/updated.
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
     const customerId = session.customer as string
-    await supabase
-      .from('companies')
-      .update({ subscription_status: 'active', stripe_customer_id: customerId })
-      .eq('stripe_customer_id', customerId)
+    const companyId = session.metadata?.company_id
+    if (customerId && companyId) {
+      await supabase
+        .from('companies')
+        .update({ stripe_customer_id: customerId })
+        .eq('id', companyId)
+    }
   }
 
   if (event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.created') {
