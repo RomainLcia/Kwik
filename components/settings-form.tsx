@@ -1,14 +1,12 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Upload, X } from 'lucide-react'
-// Button import kept for the rest of the form
 
 type Company = {
   id: string
@@ -26,7 +24,6 @@ type Company = {
   quote_prefix: string | null
   invoice_prefix: string | null
   legal_mentions: string | null
-  logo_url: string | null
 }
 
 export function SettingsForm({ company }: { company: Company }) {
@@ -34,56 +31,6 @@ export function SettingsForm({ company }: { company: Company }) {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [vatApplicable, setVatApplicable] = useState(company.vat_applicable)
-  const [logoUrl, setLogoUrl] = useState<string | null>(company.logo_url)
-  const [logoLoading, setLogoLoading] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
-  async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    if (!file.type.startsWith('image/')) {
-      alert('Veuillez sélectionner une image.')
-      return
-    }
-    if (file.size > 2 * 1024 * 1024) {
-      alert("L'image ne doit pas dépasser 2 Mo.")
-      return
-    }
-
-    setLogoLoading(true)
-    const supabase = createClient()
-    const ext = file.name.split('.').pop()
-    const path = `${company.id}/logo.${ext}`
-
-    const { error: uploadError } = await supabase.storage
-      .from('company-logos')
-      .upload(path, file, { upsert: true })
-
-    if (uploadError) {
-      alert("Erreur lors de l'upload du logo.")
-      setLogoLoading(false)
-      return
-    }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('company-logos')
-      .getPublicUrl(path)
-
-    // Ajoute un timestamp pour forcer le refresh du cache navigateur
-    const urlWithCache = `${publicUrl}?t=${Date.now()}`
-
-    await supabase.from('companies').update({ logo_url: publicUrl }).eq('id', company.id)
-    setLogoUrl(urlWithCache)
-    setLogoLoading(false)
-  }
-
-  async function handleLogoDelete() {
-    const supabase = createClient()
-    await supabase.from('companies').update({ logo_url: null }).eq('id', company.id)
-    setLogoUrl(null)
-    if (fileInputRef.current) fileInputRef.current.value = ''
-  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -118,56 +65,6 @@ export function SettingsForm({ company }: { company: Company }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-
-      {/* Logo */}
-      <Card>
-        <CardHeader><CardTitle className="text-base">Logo de l&apos;entreprise</CardTitle></CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-5">
-            {logoUrl ? (
-              <div className="relative flex-shrink-0">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={logoUrl}
-                  alt="Logo"
-                  className="h-16 w-auto max-w-[180px] object-contain rounded border border-gray-200 bg-gray-50 p-1"
-                />
-                <button
-                  type="button"
-                  onClick={handleLogoDelete}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 transition-colors"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            ) : (
-              <div className="h-16 w-32 border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                <span className="text-xs text-gray-400">Aucun logo</span>
-              </div>
-            )}
-            <div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/png,image/jpeg,image/jpg"
-                onChange={handleLogoUpload}
-                className="hidden"
-                id="logo-upload"
-              />
-              <label
-                htmlFor="logo-upload"
-                className={`inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors ${logoLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-              >
-                <Upload className="h-4 w-4" />
-                {logoLoading ? 'Envoi en cours...' : 'Importer un logo'}
-              </label>
-              <p className="text-xs text-gray-400 mt-1.5">PNG ou JPG uniquement — 2 Mo max</p>
-              <p className="text-xs text-gray-400">Apparaît en haut du devis et de la facture.</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       <Card>
         <CardHeader><CardTitle className="text-base">Informations générales</CardTitle></CardHeader>
         <CardContent className="space-y-4">
