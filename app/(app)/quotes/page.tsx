@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { QuoteStatusBadge } from '@/components/quote-status-badge'
 import { NewQuoteButton } from '@/components/new-quote-button'
-import { FileText } from 'lucide-react'
+import { FileText, Plus } from 'lucide-react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
