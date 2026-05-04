@@ -8,28 +8,42 @@ import { useState } from 'react'
 
 interface QuoteSignatureFormProps {
   quoteId: string
+  publicToken: string
 }
 
-export function QuoteSignatureForm({ quoteId }: QuoteSignatureFormProps) {
+export function QuoteSignatureForm({ quoteId, publicToken }: QuoteSignatureFormProps) {
   const [name, setName] = useState('')
   const [accepted, setAccepted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState<'signed' | 'rejected' | null>(null)
+  const [error, setError] = useState('')
 
   async function handleSign() {
     if (!name.trim() || !accepted) return
     setLoading(true)
-    await signQuote(quoteId, name.trim())
-    setDone('signed')
-    setLoading(false)
+    setError('')
+    try {
+      await signQuote(quoteId, name.trim(), publicToken)
+      setDone('signed')
+    } catch {
+      setError('Une erreur est survenue. Veuillez réessayer.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function handleReject() {
     if (!confirm('Confirmer le refus de ce devis ?')) return
     setLoading(true)
-    await rejectQuote(quoteId)
-    setDone('rejected')
-    setLoading(false)
+    setError('')
+    try {
+      await rejectQuote(quoteId, publicToken)
+      setDone('rejected')
+    } catch {
+      setError('Une erreur est survenue. Veuillez réessayer.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (done === 'signed') {
@@ -97,6 +111,8 @@ export function QuoteSignatureForm({ quoteId }: QuoteSignatureFormProps) {
           Refuser
         </Button>
       </div>
+
+      {error && <p className="text-xs text-red-500 text-center">{error}</p>}
 
       <p className="text-xs text-gray-400 text-center">
         Signature électronique simple — votre IP et l&apos;horodatage seront enregistrés.

@@ -57,9 +57,11 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
     rejected: 'Devis refusé',
   }
 
+  const discountPercent = Number(quote.discount_percent ?? 0)
   const vatBreakdown = (lines ?? []).reduce((acc, line) => {
     const rate = line.vat_rate
-    acc[rate] = (acc[rate] ?? 0) + Number(line.line_total_ht) * rate / 100
+    const base = Math.round(Number(line.line_total_ht) * (1 - discountPercent / 100) * 100) / 100
+    acc[rate] = Math.round(((acc[rate] ?? 0) + base * rate / 100) * 100) / 100
     return acc
   }, {} as Record<number, number>)
 

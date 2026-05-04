@@ -27,7 +27,12 @@ export function QuoteActions({ quoteId, status, totalTTC, clientEmail, publicTok
   async function handleDelete() {
     if (!confirm('Supprimer ce devis définitivement ?')) return
     setLoading(true)
-    await deleteQuote(quoteId)
+    try {
+      await deleteQuote(quoteId)
+    } catch {
+      toast.error('Erreur lors de la suppression.')
+      setLoading(false)
+    }
   }
 
   async function handleSendEmail() {
@@ -37,7 +42,7 @@ export function QuoteActions({ quoteId, status, totalTTC, clientEmail, publicTok
     if (result?.error) {
       toast.error(result.error)
     } else {
-      toast.success(`Email envoyé à ${clientEmail}`)
+      toast.success(clientEmail ? `Email envoyé à ${clientEmail}` : 'Email envoyé avec succès')
     }
   }
 

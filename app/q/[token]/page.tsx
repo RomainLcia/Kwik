@@ -41,9 +41,11 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
     })
   }
 
+  const discountPercent = Number(quote.discount_percent ?? 0)
   const vatBreakdown = (lines ?? []).reduce((acc, line) => {
     const rate = line.vat_rate
-    acc[rate] = (acc[rate] ?? 0) + Number(line.line_total_ht) * rate / 100
+    const base = Math.round(Number(line.line_total_ht) * (1 - discountPercent / 100) * 100) / 100
+    acc[rate] = Math.round(((acc[rate] ?? 0) + base * rate / 100) * 100) / 100
     return acc
   }, {} as Record<number, number>)
 
@@ -194,7 +196,17 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
         {/* Signature */}
         {(quote.status === 'viewed' || quote.status === 'sent') && (
           <div className="mb-6">
-            <QuoteSignatureForm quoteId={quote.id} />
+            {new Date(quote.validity_date) < new Date() ? (
+              <div className="bg-orange-50 border border-orange-200 rounded-xl p-5 text-center">
+                <p className="font-semibold text-orange-800">Ce devis a expiré</p>
+                <p className="text-sm text-orange-600 mt-1">
+                  La date de validité ({format(new Date(quote.validity_date), 'd MMMM yyyy', { locale: fr })}) est dépassée.
+                  Contactez le prestataire pour obtenir un nouveau devis.
+                </p>
+              </div>
+            ) : (
+              <QuoteSignatureForm quoteId={quote.id} publicToken={token} />
+            )}
           </div>
         )}
 

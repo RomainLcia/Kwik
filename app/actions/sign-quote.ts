@@ -6,11 +6,24 @@ import { Resend } from 'resend'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
-export async function signQuote(quoteId: string, signerName: string) {
+export async function signQuote(quoteId: string, signerName: string, publicToken: string) {
   const supabase = createServiceClient()
   const hdrs = await headers()
   const ip = hdrs.get('x-forwarded-for')?.split(',')[0]?.trim() ?? hdrs.get('x-real-ip') ?? 'unknown'
   const ua = hdrs.get('user-agent') ?? 'unknown'
+
+  // Vérifier que le token correspond bien à ce devis et qu'il n'est pas déjà traité
+  const { data: existing } = await supabase
+    .from('quotes')
+    .select('id, status')
+    .eq('id', quoteId)
+    .eq('public_token', publicToken)
+    .single()
+
+  if (!existing) throw new Error('Devis introuvable ou token invalide')
+  if (existing.status === 'accepted' || existing.status === 'rejected') {
+    throw new Error('Ce devis a déjà été traité')
+  }
 
   const signatureData = {
     name: signerName,
@@ -27,6 +40,7 @@ export async function signQuote(quoteId: string, signerName: string) {
       responded_at: new Date().toISOString(),
     })
     .eq('id', quoteId)
+    .eq('public_token', publicToken)
     .select('*, clients(name, email)')
     .single()
 
@@ -115,8 +129,21 @@ export async function signQuote(quoteId: string, signerName: string) {
   }
 }
 
-export async function rejectQuote(quoteId: string) {
+export async function rejectQuote(quoteId: string, publicToken: string) {
   const supabase = createServiceClient()
+
+  // Vérifier que le token correspond bien à ce devis et qu'il n'est pas déjà traité
+  const { data: existing } = await supabase
+    .from('quotes')
+    .select('id, status')
+    .eq('id', quoteId)
+    .eq('public_token', publicToken)
+    .single()
+
+  if (!existing) throw new Error('Devis introuvable ou token invalide')
+  if (existing.status === 'accepted' || existing.status === 'rejected') {
+    throw new Error('Ce devis a déjà été traité')
+  }
 
   const { data: quote, error } = await supabase
     .from('quotes')
@@ -125,6 +152,7 @@ export async function rejectQuote(quoteId: string) {
       responded_at: new Date().toISOString(),
     })
     .eq('id', quoteId)
+    .eq('public_token', publicToken)
     .select('*, clients(name, email)')
     .single()
 
