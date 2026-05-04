@@ -1,8 +1,17 @@
 import { createClient } from '@/lib/supabase/server'
 import { getStripe } from '@/lib/stripe'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST() {
+const PRICE_IDS: Record<string, string> = {
+  basic: process.env.STRIPE_PRICE_ID_BASIC!,
+  pro: process.env.STRIPE_PRICE_ID_PRO!,
+  unlimited: process.env.STRIPE_PRICE_ID_UNLIMITED!,
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.json().catch(() => ({}))
+  const plan: string = body.plan && PRICE_IDS[body.plan] ? body.plan : 'basic'
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
@@ -31,9 +40,9 @@ export async function POST() {
     customer: customerId,
     mode: 'subscription',
     payment_method_types: ['card'],
-    line_items: [{ price: process.env.STRIPE_PRICE_ID!, quantity: 1 }],
+    line_items: [{ price: PRICE_IDS[plan], quantity: 1 }],
     subscription_data: { trial_period_days: 14 },
-    metadata: { company_id: company.id },
+    metadata: { company_id: company.id, plan },
     success_url: 'https://www.kwik-devis.fr/dashboard?subscribed=true',
     cancel_url: 'https://www.kwik-devis.fr/subscribe',
   })

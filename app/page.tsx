@@ -205,37 +205,60 @@ export default function LandingPage() {
 
       {/* Pricing */}
       <section className="max-w-5xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Un prix simple, sans surprise</h2>
-        <p className="text-gray-500 mb-12">Tout inclus. Sans engagement. Annulable à tout moment.</p>
-        <div className="max-w-sm mx-auto bg-white border-2 border-blue-600 rounded-2xl p-8 shadow-lg">
-          <p className="font-semibold text-gray-500 mb-2">Plan Solo</p>
-          <div className="flex items-baseline justify-center gap-1 mb-2">
-            <span className="text-5xl font-bold text-gray-900">19,99</span>
-            <span className="text-2xl text-gray-900">€</span>
-            <span className="text-gray-400">/mois</span>
-          </div>
-          <p className="text-sm text-blue-600 font-medium mb-8">14 jours gratuits</p>
-          <ul className="space-y-3 text-left mb-8">
-            {[
-              'Devis illimités',
-              'Factures illimitées',
-              'Signature électronique',
-              'PDF pro à votre image',
-              'Envoi email au client',
-              'Dashboard & KPIs',
-              'Support par email',
-            ].map(f => (
-              <li key={f} className="flex items-center gap-2 text-sm text-gray-700">
-                <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                {f}
-              </li>
-            ))}
-          </ul>
-          <Link href="/signup">
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 py-6 text-base">
-              Commencer l&apos;essai gratuit →
-            </Button>
-          </Link>
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">Des tarifs clairs, sans surprise</h2>
+        <p className="text-gray-500 mb-12">14 jours gratuits · Sans engagement · Annulable à tout moment</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+          {[
+            {
+              name: 'Basique',
+              price: '19,99',
+              quota: '10 devis / mois',
+              features: ['10 devis par mois', 'Factures illimitées', 'Signature électronique', 'PDF pro à votre image', 'Envoi email au client', 'Dashboard & KPIs'],
+              highlighted: false,
+            },
+            {
+              name: 'Pro',
+              price: '29,99',
+              quota: '30 devis / mois',
+              features: ['30 devis par mois', 'Factures illimitées', 'Signature électronique', 'PDF pro à votre image', 'Envoi email au client', 'Dashboard & KPIs', 'Support prioritaire'],
+              highlighted: true,
+            },
+            {
+              name: 'Illimité',
+              price: '39,99',
+              quota: 'Devis illimités',
+              features: ['Devis illimités', 'Factures illimitées', 'Signature électronique', 'PDF pro à votre image', 'Envoi email au client', 'Dashboard & KPIs', 'Support prioritaire'],
+              highlighted: false,
+            },
+          ].map(plan => (
+            <div key={plan.name} className={`relative bg-white rounded-2xl p-8 flex flex-col ${plan.highlighted ? 'border-2 border-blue-600 shadow-xl' : 'border border-gray-200 shadow-sm'}`}>
+              {plan.highlighted && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">Populaire</span>
+                </div>
+              )}
+              <p className="font-semibold text-gray-500 mb-1">{plan.name}</p>
+              <div className="flex items-baseline gap-1 mb-1">
+                <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                <span className="text-xl text-gray-900">€</span>
+                <span className="text-gray-400">/mois</span>
+              </div>
+              <p className="text-sm text-blue-600 font-medium mb-6">{plan.quota}</p>
+              <ul className="space-y-2.5 mb-8 flex-1">
+                {plan.features.map(f => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-gray-700">
+                    <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/signup">
+                <Button className={`w-full py-5 text-base ${plan.highlighted ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-900 hover:bg-gray-800'}`}>
+                  Essayer gratuitement →
+                </Button>
+              </Link>
+            </div>
+          ))}
         </div>
       </section>
 

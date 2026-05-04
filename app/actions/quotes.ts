@@ -13,8 +13,31 @@ async function getContext() {
   return { supabase, company }
 }
 
+const PLAN_LIMITS: Record<string, number> = {
+  basic: 10,
+  pro: 30,
+  unlimited: Infinity,
+}
+
 export async function generateQuoteNumber() {
   const { supabase, company } = await getContext()
+
+  // Vérification du quota mensuel
+  const plan = company.plan ?? 'basic'
+  const limit = PLAN_LIMITS[plan] ?? 10
+  if (limit !== Infinity) {
+    const startOfMonth = new Date()
+    startOfMonth.setDate(1)
+    startOfMonth.setHours(0, 0, 0, 0)
+    const { count } = await supabase
+      .from('quotes')
+      .select('id', { count: 'exact', head: true })
+      .eq('company_id', company.id)
+      .gte('created_at', startOfMonth.toISOString())
+    if ((count ?? 0) >= limit) {
+      return { error: `Limite de ${limit} devis/mois atteinte (plan ${plan}). Passez à un plan supérieur.` }
+    }
+  }
 
   const newCounter = (company.quote_counter ?? 0) + 1
   await supabase.from('companies').update({ quote_counter: newCounter }).eq('id', company.id)

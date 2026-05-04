@@ -19,16 +19,23 @@ export async function POST(req: NextRequest) {
 
   const supabase = createServiceClient()
 
+  const PRICE_TO_PLAN: Record<string, string> = {
+    [process.env.STRIPE_PRICE_ID_BASIC!]: 'basic',
+    [process.env.STRIPE_PRICE_ID_PRO!]: 'pro',
+    [process.env.STRIPE_PRICE_ID_UNLIMITED!]: 'unlimited',
+  }
+
   // checkout.session.completed : on s'assure juste que stripe_customer_id est bien enregistré.
   // Le statut réel (trial/active) est géré par customer.subscription.created/updated.
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
     const customerId = session.customer as string
     const companyId = session.metadata?.company_id
+    const plan = session.metadata?.plan ?? 'basic'
     if (customerId && companyId) {
       await supabase
         .from('companies')
-        .update({ stripe_customer_id: customerId })
+        .update({ stripe_customer_id: customerId, plan })
         .eq('id', companyId)
     }
   }
@@ -40,9 +47,11 @@ export async function POST(req: NextRequest) {
       : sub.status === 'active' ? 'active'
       : sub.status === 'past_due' ? 'past_due'
       : 'canceled'
+    const priceId = sub.items.data[0]?.price?.id
+    const plan = priceId && PRICE_TO_PLAN[priceId] ? PRICE_TO_PLAN[priceId] : undefined
     await supabase
       .from('companies')
-      .update({ subscription_status: status })
+      .update({ subscription_status: status, ...(plan ? { plan } : {}) })
       .eq('stripe_customer_id', customerId)
   }
 
