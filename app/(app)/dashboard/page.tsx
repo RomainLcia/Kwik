@@ -82,10 +82,10 @@ export default async function DashboardPage() {
   ]
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8">
+    <div className="max-w-5xl mx-auto px-4 md:px-6 py-6 md:py-8">
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6 md:mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
           <p className="text-sm text-gray-400 mt-1 capitalize">{format(now, 'EEEE d MMMM yyyy', { locale: fr })}</p>
@@ -139,7 +139,21 @@ export default async function DashboardPage() {
             <div className="divide-y divide-gray-50">
               {recentQuotesRes.data.map(quote => (
                 <Link key={quote.id} href={`/quotes/${quote.id}`}>
-                  <div className="grid grid-cols-12 gap-4 px-6 py-3.5 hover:bg-gray-50/80 transition-colors cursor-pointer items-center">
+                  {/* Mobile card */}
+                  <div className="md:hidden flex items-center justify-between px-4 py-3.5 hover:bg-gray-50/80 transition-colors cursor-pointer">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="text-sm font-semibold text-gray-900">{quote.number}</span>
+                        <QuoteStatusBadge status={quote.status} />
+                      </div>
+                      <p className="text-sm text-gray-500 truncate">{(quote.clients as any)?.name ?? '—'}</p>
+                    </div>
+                    <span className="text-sm font-bold text-gray-900 ml-3 flex-shrink-0">
+                      {Number(quote.total_ttc).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} €
+                    </span>
+                  </div>
+                  {/* Desktop table row */}
+                  <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3.5 hover:bg-gray-50/80 transition-colors cursor-pointer items-center">
                     <span className="col-span-3 text-sm font-semibold text-gray-900">{quote.number}</span>
                     <span className="col-span-4 text-sm text-gray-600 truncate">{(quote.clients as any)?.name ?? '—'}</span>
                     <span className="col-span-2 text-sm text-gray-400">{format(new Date(quote.issue_date), 'd MMM', { locale: fr })}</span>

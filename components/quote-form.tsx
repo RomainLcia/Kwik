@@ -187,7 +187,7 @@ export function QuoteForm({
       <Card className="mb-4">
         <CardHeader className="pb-3"><CardTitle className="text-base">Informations générales</CardTitle></CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label>N° de devis</Label>
               <Input value={number} readOnly className="bg-gray-50 text-gray-500" />
@@ -210,7 +210,7 @@ export function QuoteForm({
             <Input value={object} onChange={e => setObject(e.target.value)} placeholder="Ex: Travaux peinture salon" />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label>Date d&apos;émission</Label>
               <Input type="date" value={issueDate} onChange={e => setIssueDate(e.target.value)} />
@@ -352,7 +352,7 @@ export function QuoteForm({
 
           <div className="flex items-center justify-between gap-3">
             <span className="text-sm text-gray-500">Remise (%)</span>
-            <div className="flex items-center gap-2 w-32">
+            <div className="flex items-center gap-2 w-24 flex-shrink-0">
               <Input
                 type="number"
                 min="0"
