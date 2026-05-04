@@ -48,6 +48,7 @@ export type InvoicePDFData = {
   notes: string | null
   terms: string | null
   payment_status: string
+  paid_at?: string | null
 }
 
 interface InvoiceDocumentProps {
@@ -257,6 +258,17 @@ export function InvoiceDocument({ invoice, lines, company, client }: InvoiceDocu
               <Text style={s.tBig}>TOTAL TTC</Text>
               <Text style={s.tBigBlue}>{fmt(Number(invoice.total_ttc))}</Text>
             </View>
+            {invoice.payment_status === 'paid' && (
+              <>
+                <View style={s.thinDivider} />
+                <View style={s.totalsRow}>
+                  <Text style={[s.tLabel, { color: green }]}>✓ Facture réglée</Text>
+                  {invoice.paid_at ? (
+                    <Text style={[s.tVal, { color: green }]}>le {fmtDate(invoice.paid_at.split('T')[0])}</Text>
+                  ) : null}
+                </View>
+              </>
+            )}
           </View>
         </View>
 

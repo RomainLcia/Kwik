@@ -34,9 +34,11 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
     .eq('invoice_id', id)
     .order('position')
 
+  const discountPercent = Number(invoice.discount_percent ?? 0)
   const vatBreakdown = (lines ?? []).reduce((acc, line) => {
     const rate = line.vat_rate
-    acc[rate] = (acc[rate] ?? 0) + Number(line.line_total_ht) * rate / 100
+    const base = Math.round(Number(line.line_total_ht) * (1 - discountPercent / 100) * 100) / 100
+    acc[rate] = Math.round(((acc[rate] ?? 0) + base * rate / 100) * 100) / 100
     return acc
   }, {} as Record<number, number>)
 
@@ -55,6 +57,9 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
           <p className="text-sm text-gray-400 mt-0.5">
             Émise le {format(new Date(invoice.issue_date), 'd MMMM yyyy', { locale: fr })} ·
             Échéance le {format(new Date(invoice.due_date), 'd MMMM yyyy', { locale: fr })}
+            {invoice.payment_status === 'paid' && invoice.paid_at && (
+              <> · <span className="text-green-600 font-medium">Réglée le {format(new Date(invoice.paid_at), 'd MMMM yyyy', { locale: fr })}</span></>
+            )}
           </p>
         </div>
         {invoice.quote_id && (
