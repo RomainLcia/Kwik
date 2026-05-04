@@ -16,6 +16,31 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Kwik — Devis pro en 3 minutes",
   description: "Créez et envoyez des devis professionnels en moins de 3 minutes. Pour tous les indépendants et petites entreprises qui vendent des prestations.",
+  metadataBase: new URL('https://www.kwik-devis.fr'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: "Kwik — Devis pro en 3 minutes",
+    description: "Créez et envoyez des devis professionnels en moins de 3 minutes. Signature électronique, conversion en facture, envoi par email.",
+    url: 'https://www.kwik-devis.fr',
+    siteName: 'Kwik',
+    locale: 'fr_FR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Kwik — Devis pro en 3 minutes",
+    description: "Créez et envoyez des devis professionnels en moins de 3 minutes. Pour artisans, freelances et indépendants.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -25,7 +50,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="fr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">

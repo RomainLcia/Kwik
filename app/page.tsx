@@ -261,6 +261,7 @@ export default function LandingPage() {
           <span className="font-bold text-gray-900">Kwik</span>
           <p>© 2026 Kwik — Le devis en 3 minutes</p>
           <div className="flex gap-4">
+            <Link href="/cgu" className="hover:text-gray-600">CGU</Link>
             <Link href="/login" className="hover:text-gray-600">Connexion</Link>
             <Link href="/signup" className="hover:text-gray-600">S&apos;inscrire</Link>
           </div>
