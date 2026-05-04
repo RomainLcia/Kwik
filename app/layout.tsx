@@ -20,6 +20,9 @@ export const viewport = {
 }
 
 export const metadata: Metadata = {
+  verification: {
+    google: 'qdEqVe6X9_cYbvuOQz8SNGiPqDpGe-_KzyX0xzqcAtI',
+  },
   title: "Kwik — Devis pro en 3 minutes",
   description: "Créez et envoyez des devis professionnels en moins de 3 minutes. Pour tous les indépendants et petites entreprises qui vendent des prestations.",
   metadataBase: new URL('https://www.kwik-devis.fr'),
