@@ -89,6 +89,17 @@ export type QuoteData = {
 export async function saveQuote(data: QuoteData) {
   const { supabase, company } = await getContext()
 
+  // Entreprise non assujettie à la TVA (art. 293 B du CGI) : on impose 0 % de TVA
+  // côté serveur, quel que soit ce que le formulaire a envoyé.
+  if (!company.vat_applicable) {
+    data = {
+      ...data,
+      total_vat: 0,
+      total_ttc: data.total_ht,
+      lines: data.lines.map(l => ({ ...l, vat_rate: 0, line_total_ttc: l.line_total_ht })),
+    }
+  }
+
   const quotePayload = {
     company_id: company.id,
     client_id: data.client_id || null,

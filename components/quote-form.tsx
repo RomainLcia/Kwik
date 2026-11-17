@@ -23,7 +23,7 @@ type CatalogItem = {
 
 type Line = Omit<QuoteLine, 'id'> & { tempId: string }
 
-function newLine(position: number): Line {
+function newLine(position: number, vatRate = 20): Line {
   return {
     tempId: Math.random().toString(36).slice(2),
     position,
@@ -32,7 +32,7 @@ function newLine(position: number): Line {
     quantity: 1,
     unit: 'unité',
     price_ht: 0,
-    vat_rate: 20,
+    vat_rate: vatRate,
     line_total_ht: 0,
     line_total_ttc: 0,
   }
@@ -57,6 +57,8 @@ export function QuoteForm({
   quoteNumber, companyId, vatApplicable, clients, catalogItems, existingQuote
 }: QuoteFormProps) {
   const router = useRouter()
+  // Entreprise non assujettie (art. 293 B du CGI) : aucune TVA sur les lignes
+  const defaultVatRate = vatApplicable ? 20 : 0
   const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const today = new Date().toISOString().split('T')[0]
@@ -75,7 +77,7 @@ export function QuoteForm({
   const [notes, setNotes] = useState(existingQuote?.notes ?? '')
   const [terms, setTerms] = useState(existingQuote?.terms ?? 'Acompte de 30% à la commande.')
   const [lines, setLines] = useState<Line[]>(
-    existingQuote?.lines?.map((l, i) => ({ ...l, tempId: String(i) })) ?? [newLine(0)]
+    existingQuote?.lines?.map((l, i) => (vatApplicable ? { ...l, tempId: String(i) } : calcLine({ ...l, vat_rate: 0, tempId: String(i) }))) ?? [newLine(0, defaultVatRate)]
   )
   const [saving, setSaving] = useState(false)
   const [savedAt, setSavedAt] = useState<Date | null>(null)
@@ -159,12 +161,12 @@ export function QuoteForm({
 
   function addCatalogItem(item: CatalogItem) {
     const line = calcLine({
-      ...newLine(lines.length),
+      ...newLine(lines.length, defaultVatRate),
       label: item.label,
       description: item.description ?? '',
       price_ht: item.default_price_ht,
       unit: item.default_unit,
-      vat_rate: item.default_vat_rate,
+      vat_rate: vatApplicable ? item.default_vat_rate : 0,
     })
     setLines(prev => [...prev, line])
     setCatalogOpen(false)
@@ -252,7 +254,7 @@ export function QuoteForm({
               <Button variant="outline" size="sm" onClick={() => setCatalogOpen(true)}>
                 <BookOpen className="h-4 w-4 mr-1" />Catalogue
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setLines(prev => [...prev, newLine(prev.length)])}>
+              <Button variant="outline" size="sm" onClick={() => setLines(prev => [...prev, newLine(prev.length, defaultVatRate)])}>
                 <Plus className="h-4 w-4 mr-1" />Ligne
               </Button>
             </div>
@@ -415,7 +417,7 @@ export function QuoteForm({
           <Separator />
 
           <div className="flex justify-between font-semibold text-lg">
-            <span>Total TTC</span>
+            <span>{vatApplicable ? 'Total TTC' : 'Total'}</span>
             <span className="text-blue-600">{totalTTC.toFixed(2)} €</span>
           </div>
         </CardContent>

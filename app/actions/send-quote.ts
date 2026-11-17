@@ -65,7 +65,7 @@ export async function sendQuoteByEmail(quoteId: string) {
     <div style="background:white;padding:28px;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 10px 10px;">
       <h2 style="margin:0 0 16px;font-size:20px;">Devis n° ${quote.number}</h2>
       ${quote.object ? `<p style="color:#6B7280;margin:0 0 12px;font-size:14px;">Objet : ${quote.object}</p>` : ''}
-      <p style="margin:0 0 4px;font-size:14px;">Montant total TTC : <strong style="color:#2563EB;font-size:20px;">${Number(quote.total_ttc).toFixed(2)} €</strong></p>
+      <p style="margin:0 0 4px;font-size:14px;">Montant total${company.vat_applicable ? ' TTC' : ''} : <strong style="color:#2563EB;font-size:20px;">${Number(quote.total_ttc).toFixed(2)} €</strong></p>
       <p style="color:#6B7280;font-size:13px;margin:0 0 24px;">Valable jusqu'au ${validityFormatted}</p>
       <a href="${publicUrl}" style="display:inline-block;background:#2563EB;color:white;padding:13px 26px;border-radius:7px;text-decoration:none;font-weight:600;font-size:15px;">Consulter le devis →</a>
       <p style="color:#9CA3AF;font-size:12px;margin:20px 0 0;">Le devis est également joint en pièce jointe au format PDF.</p>

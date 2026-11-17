@@ -255,7 +255,7 @@ export function InvoiceDocument({ invoice, lines, company, client }: InvoiceDocu
             )}
             <View style={s.thinDivider} />
             <View style={s.totalsRow}>
-              <Text style={s.tBig}>TOTAL TTC</Text>
+              <Text style={s.tBig}>{company.vat_applicable ? 'TOTAL TTC' : 'TOTAL'}</Text>
               <Text style={s.tBigBlue}>{fmt(Number(invoice.total_ttc))}</Text>
             </View>
             {invoice.payment_status === 'paid' && (

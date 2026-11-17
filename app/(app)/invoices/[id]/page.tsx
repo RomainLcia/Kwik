@@ -139,7 +139,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
             )}
             <Separator />
             <div className="flex justify-between font-semibold text-base">
-              <span>Total TTC</span>
+              <span>{company.vat_applicable ? 'Total TTC' : 'Total'}</span>
               <span className="text-blue-600">{Number(invoice.total_ttc).toFixed(2)} €</span>
             </div>
           </div>

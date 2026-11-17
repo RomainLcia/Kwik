@@ -249,7 +249,7 @@ export function QuoteDocument({ quote, lines, company, client }: QuoteDocumentPr
             )}
             <View style={s.thinDivider} />
             <View style={s.totalsRow}>
-              <Text style={s.tBig}>TOTAL TTC</Text>
+              <Text style={s.tBig}>{company.vat_applicable ? 'TOTAL TTC' : 'TOTAL'}</Text>
               <Text style={s.tBigBlue}>{fmt(Number(quote.total_ttc))}</Text>
             </View>
           </View>

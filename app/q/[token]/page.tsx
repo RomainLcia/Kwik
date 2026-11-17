@@ -166,7 +166,7 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
               )}
               <Separator />
               <div className="flex justify-between font-bold text-base">
-                <span>Total TTC</span>
+                <span>{company?.vat_applicable ? 'Total TTC' : 'Total'}</span>
                 <span className="text-blue-600">{Number(quote.total_ttc).toFixed(2)} €</span>
               </div>
             </div>
