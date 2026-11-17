@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { KwikLogo } from '@/components/kwik-logo'
-import { ArrowRight, Check, Clock, FileText, PenLine, Send, Smartphone, Zap, Euro } from 'lucide-react'
+import {
+  ArrowRight, Check, Clock, FileText, PenLine, Send, Smartphone, Zap, Euro,
+  LayoutDashboard, Receipt, Users, BookOpen, Plus,
+} from 'lucide-react'
 
 const PLANS = [
   {
@@ -46,59 +49,152 @@ const LINES = [
   { label: 'Protection des sols', qty: '1 forfait', total: '150,00' },
 ]
 
+// Données d'exemple pour les captures de l'app
+const SAMPLE_QUOTES = [
+  { number: 'DEV-2026-042', client: 'Martin Dupont', status: 'Accepté', dot: 'bg-emerald-500', amount: '1 881,00 €' },
+  { number: 'DEV-2026-041', client: 'Atelier Rivière', status: 'Consulté', dot: 'bg-amber-500', amount: '640,00 €' },
+  { number: 'DEV-2026-040', client: 'Claire Moreau', status: 'Envoyé', dot: 'bg-blue-600', amount: '2 350,00 €' },
+  { number: 'DEV-2026-039', client: 'SCI Les Tilleuls', status: 'Accepté', dot: 'bg-emerald-500', amount: '4 120,00 €' },
+]
+
+function Dot({ className }: { className: string }) {
+  return <span className={`h-1.5 w-1.5 rounded-full ${className}`} aria-hidden="true" />
+}
+
 // Aperçu d'un devis tel qu'il apparaît dans Kwik (exemple)
 function QuotePreview() {
   return (
     <div className="relative">
-      <div className="rounded-xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(14,17,23,0.04),0_12px_32px_-12px_rgba(14,17,23,0.18)] overflow-hidden">
+      <div className="rounded-md bg-white text-gray-900 shadow-[0_30px_60px_-20px_rgba(10,14,60,0.55)] overflow-hidden">
         <div className="flex items-center justify-between px-5 h-12 border-b border-gray-200">
-          <span className="font-mono text-[13px] text-gray-900">DEV-2026-042</span>
-          <span className="inline-flex items-center gap-1.5 rounded-md border border-gray-200 px-2 py-0.5 text-xs font-medium text-gray-700">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-            Accepté
+          <span className="font-mono text-[13px]">DEV-2026-042</span>
+          <span className="inline-flex items-center gap-1.5 rounded border border-gray-200 px-2 py-0.5 text-xs font-medium text-gray-700">
+            <Dot className="bg-emerald-500" /> Accepté
           </span>
         </div>
         <div className="px-5 py-4 grid grid-cols-2 gap-4 border-b border-gray-200 text-[13px]">
           <div>
             <p className="text-gray-500">Client</p>
-            <p className="text-gray-900 font-medium mt-0.5">Martin Dupont</p>
+            <p className="font-medium mt-0.5">Martin Dupont</p>
           </div>
           <div>
             <p className="text-gray-500">Objet</p>
-            <p className="text-gray-900 font-medium mt-0.5">Peinture du salon</p>
+            <p className="font-medium mt-0.5">Peinture du salon</p>
           </div>
         </div>
         <div className="px-5 py-2">
           {LINES.map(line => (
             <div key={line.label} className="flex items-center justify-between gap-3 py-2.5 border-b border-gray-100 last:border-0 text-[13px]">
               <div className="min-w-0">
-                <p className="text-gray-900 truncate">{line.label}</p>
+                <p className="truncate">{line.label}</p>
                 <p className="text-gray-500 text-xs">{line.qty}</p>
               </div>
-              <span className="tabular text-gray-900">{line.total} €</span>
+              <span className="tabular">{line.total} €</span>
             </div>
           ))}
         </div>
         <div className="px-5 py-4 bg-gray-50 border-t border-gray-200 space-y-1 text-[13px]">
           <div className="flex justify-between text-gray-500"><span>Total HT</span><span className="tabular">1 710,00 €</span></div>
           <div className="flex justify-between text-gray-500"><span>TVA 10 %</span><span className="tabular">171,00 €</span></div>
-          <div className="flex justify-between pt-1.5 text-gray-900 font-semibold">
+          <div className="flex justify-between pt-1.5 font-semibold">
             <span>Total TTC</span><span className="font-display tabular text-lg">1 881,00 €</span>
           </div>
         </div>
       </div>
 
-      {/* Signature reçue */}
-      <div className="absolute -bottom-16 left-4 right-4 sm:left-auto sm:-right-4 sm:w-64 rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-[0_12px_32px_-12px_rgba(14,17,23,0.25)]">
+      <div className="absolute -bottom-16 left-4 right-4 sm:left-auto sm:-right-4 sm:w-64 rounded-md bg-white text-gray-900 px-4 py-3 shadow-[0_20px_40px_-16px_rgba(10,14,60,0.6)]">
         <div className="flex items-start gap-3">
-          <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white">
+          <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gray-900 text-white">
             <Check className="h-3.5 w-3.5" />
           </span>
           <div className="min-w-0">
-            <p className="text-[13px] font-medium text-gray-900">Signé par Martin Dupont</p>
+            <p className="text-[13px] font-medium">Signé par Martin Dupont</p>
             <p className="text-xs text-gray-500">Aujourd’hui à 14:32, depuis son téléphone</p>
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+// Capture du tableau de bord (exemple)
+function DashboardShot() {
+  const nav = [
+    { icon: LayoutDashboard, label: 'Tableau de bord', active: true },
+    { icon: FileText, label: 'Devis' },
+    { icon: Receipt, label: 'Factures' },
+    { icon: Users, label: 'Clients' },
+    { icon: BookOpen, label: 'Catalogue' },
+  ]
+  return (
+    <div className="rounded-md border border-gray-200 bg-white overflow-hidden shadow-[0_24px_48px_-24px_rgba(14,17,23,0.35)]">
+      <div className="flex items-center gap-1.5 px-3 h-8 border-b border-gray-200 bg-gray-50">
+        <span className="h-2 w-2 rounded-full bg-gray-300" /><span className="h-2 w-2 rounded-full bg-gray-300" /><span className="h-2 w-2 rounded-full bg-gray-300" />
+        <span className="ml-3 text-[11px] text-gray-400">kwik-devis.fr/dashboard</span>
+      </div>
+      <div className="flex text-[12px]">
+        <div className="hidden sm:flex w-40 flex-shrink-0 flex-col gap-0.5 border-r border-gray-200 p-2.5">
+          <span className="mb-2 inline-flex items-center justify-center gap-1 rounded bg-gray-900 py-1.5 text-white"><Plus className="h-3 w-3" />Nouveau devis</span>
+          {nav.map(({ icon: Icon, label, active }) => (
+            <span key={label} className={`flex items-center gap-2 rounded px-2 py-1.5 ${active ? 'bg-gray-100 text-gray-900' : 'text-gray-500'}`}>
+              <Icon className={`h-3.5 w-3.5 ${active ? 'text-blue-600' : 'text-gray-400'}`} />{label}
+            </span>
+          ))}
+        </div>
+        <div className="flex-1 min-w-0 bg-gray-50 p-4">
+          <p className="font-display text-base font-semibold text-gray-900">Atelier Martin</p>
+          <div className="mt-3 grid grid-cols-2 lg:grid-cols-4 rounded border border-gray-200 bg-white">
+            {[['Encaissé ce mois', '6 420 €'], ['Devis en attente', '3'], ['À encaisser', '2 350 €'], ['Acceptation', '72 %']].map(([l, v], i) => (
+              <div key={l} className={`p-2.5 ${i % 2 ? 'border-l' : ''} ${i >= 2 ? 'border-t lg:border-t-0' : ''} ${i === 2 ? 'lg:border-l' : ''} border-gray-200`}>
+                <p className="text-[10.5px] text-gray-500">{l}</p>
+                <p className="font-display tabular text-[15px] font-semibold text-gray-900 mt-0.5">{v}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 rounded border border-gray-200 bg-white divide-y divide-gray-100">
+            {SAMPLE_QUOTES.slice(0, 3).map(q => (
+              <div key={q.number} className="flex items-center justify-between gap-2 px-3 py-2">
+                <span className="font-mono text-[11px] text-gray-900">{q.number}</span>
+                <span className="hidden md:block flex-1 truncate text-gray-600 px-2">{q.client}</span>
+                <span className="inline-flex items-center gap-1 rounded border border-gray-200 px-1.5 py-0.5 text-[10px] text-gray-700"><Dot className={q.dot} />{q.status}</span>
+                <span className="tabular w-20 text-right font-semibold text-gray-900">{q.amount}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Capture mobile de la liste des devis (exemple)
+function PhoneShot() {
+  return (
+    <div className="mx-auto w-[240px] rounded-[28px] border-[6px] border-gray-900 bg-white overflow-hidden shadow-[0_24px_48px_-20px_rgba(14,17,23,0.45)]">
+      <div className="px-4 pt-5 pb-3 border-b border-gray-200">
+        <p className="font-display text-lg font-semibold text-gray-900">Devis</p>
+        <div className="mt-2 inline-flex rounded border border-gray-200 p-0.5 text-[10px]">
+          <span className="rounded-sm bg-gray-900 px-2 py-0.5 text-white">Tous</span>
+          <span className="px-2 py-0.5 text-gray-500">Envoyés</span>
+          <span className="px-2 py-0.5 text-gray-500">Acceptés</span>
+        </div>
+      </div>
+      <div className="divide-y divide-gray-100 text-[11px]">
+        {SAMPLE_QUOTES.map(q => (
+          <div key={q.number} className="flex items-center justify-between gap-2 px-4 py-2.5">
+            <div className="min-w-0">
+              <p className="font-mono text-[10px] text-gray-500">{q.number}</p>
+              <p className="truncate text-gray-900">{q.client}</p>
+            </div>
+            <div className="text-right">
+              <p className="tabular font-semibold text-gray-900">{q.amount}</p>
+              <span className="inline-flex items-center gap-1 text-[9.5px] text-gray-500"><Dot className={q.dot} />{q.status}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-around border-t border-gray-200 py-2 text-gray-400">
+        <LayoutDashboard className="h-4 w-4" /><FileText className="h-4 w-4 text-blue-600" /><Users className="h-4 w-4" /><BookOpen className="h-4 w-4" />
       </div>
     </div>
   )
@@ -113,8 +209,8 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between gap-4">
           <KwikLogo size="sm" />
           <nav className="hidden md:flex items-center gap-7 text-[14px] text-gray-500" aria-label="Sections">
+            <a href="#apercu" className="hover:text-gray-900">Aperçu</a>
             <a href="#fonctionnement" className="hover:text-gray-900">Fonctionnement</a>
-            <a href="#avantages" className="hover:text-gray-900">Avantages</a>
             <a href="#tarifs" className="hover:text-gray-900">Tarifs</a>
           </nav>
           <div className="flex items-center gap-2">
@@ -128,33 +224,35 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Accroche */}
-      <section className="border-b border-gray-200 bg-[linear-gradient(to_right,var(--color-gray-100)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-gray-100)_1px,transparent_1px)] bg-[size:48px_48px]">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 pt-14 pb-20 md:pt-24 md:pb-28 grid lg:grid-cols-[1.05fr_1fr] gap-14 lg:gap-16 items-center">
+      {/* Accroche : aplat bleu électrique, lueurs violette et cyan */}
+      <section className="relative overflow-hidden bg-blue-600 text-white">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-40 -top-56 h-[640px] w-[640px] rounded-full bg-brand-violet opacity-80 blur-[120px]" />
+        <div aria-hidden="true" className="pointer-events-none absolute -left-48 -bottom-64 h-[520px] w-[520px] rounded-full bg-brand-cyan opacity-40 blur-[120px]" />
+        <div className="relative max-w-6xl mx-auto px-4 md:px-8 pt-14 pb-28 md:pt-24 md:pb-32 grid lg:grid-cols-[1.05fr_1fr] gap-14 lg:gap-16 items-center">
           <div>
-            <p className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-2.5 py-1 text-[13px] text-gray-600">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-600" aria-hidden="true" />
+            <p className="inline-flex items-center gap-2 rounded bg-white/15 px-2.5 py-1 text-[13px] text-white">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-cyan" aria-hidden="true" />
               Devis, signature et facture
             </p>
-            <h1 className="font-display text-[40px] leading-[1.05] sm:text-5xl md:text-[64px] font-semibold mt-6 text-balance">
-              Le devis en 3 minutes, <span className="text-blue-600">signé</span> le jour même.
+            <h1 className="font-display text-[40px] leading-[1.03] sm:text-5xl md:text-[66px] font-semibold mt-6 text-balance text-white">
+              Le devis en 3 minutes, signé le jour même.
             </h1>
-            <p className="text-lg text-gray-500 mt-6 max-w-xl leading-relaxed">
+            <p className="text-lg text-blue-100 mt-6 max-w-xl leading-relaxed">
               Kwik permet aux indépendants et aux petites entreprises de prestation de faire un devis propre, de l’envoyer, de le faire signer en ligne puis de le facturer. Depuis le téléphone, sur place.
             </p>
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 mt-9">
               <Link href="/signup">
-                <Button className="h-11 px-5 text-[15px] gap-2 w-full sm:w-auto">
+                <Button className="h-12 px-6 text-[15px] gap-2 w-full sm:w-auto shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)]">
                   Essayer 14 jours gratuitement <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="/login" className="inline-flex h-11 items-center justify-center px-4 text-[15px] font-medium text-gray-700 hover:text-gray-900 whitespace-nowrap">
+              <Link href="/login" className="inline-flex h-12 items-center justify-center px-4 text-[15px] font-medium text-white/90 hover:text-white whitespace-nowrap">
                 J’ai déjà un compte
               </Link>
             </div>
-            <ul className="flex flex-wrap gap-x-6 gap-y-2 mt-8 text-[13px] text-gray-500">
+            <ul className="flex flex-wrap gap-x-6 gap-y-2 mt-8 text-[13px] text-blue-100">
               {['Sans engagement', 'Résiliable en un clic', 'Prise en main en 10 minutes'].map(t => (
-                <li key={t} className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-gray-900" />{t}</li>
+                <li key={t} className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-white" />{t}</li>
               ))}
             </ul>
           </div>
@@ -165,98 +263,116 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Fonctionnement */}
-      <section id="fonctionnement" className="max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-28 scroll-mt-16">
+      {/* Captures de l'app */}
+      <section id="apercu" className="max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-28 scroll-mt-16">
         <div className="max-w-2xl">
-          <p className="text-[13px] font-medium text-blue-600">Fonctionnement</p>
-          <h2 className="font-display text-3xl md:text-[40px] leading-tight font-semibold mt-2 text-balance">
-            De la visite à la signature, sans repasser par le bureau
+          <p className="text-[13px] font-semibold uppercase tracking-wider text-blue-600">Aperçu</p>
+          <h2 className="font-display text-3xl md:text-[44px] leading-tight font-semibold mt-2 text-balance">
+            Tout votre suivi sur un écran, au bureau comme sur le chantier
           </h2>
+          <p className="text-gray-500 mt-4 text-lg">Ce qui est encaissé, ce qui attend une réponse, ce qui reste à facturer.</p>
         </div>
-        <ol className="grid md:grid-cols-3 mt-12 border-t border-gray-200">
-          {STEPS.map(({ icon: Icon, title, desc }, i) => (
-            <li key={title} className={`pt-8 pb-2 md:pr-8 ${i > 0 ? 'md:pl-8 md:border-l border-gray-200' : ''}`}>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="font-mono text-xs text-gray-400 tabular">0{i + 1}</span>
-                <Icon className="h-4 w-4 text-gray-900" />
-              </div>
-              <h3 className="text-lg font-semibold">{title}</h3>
-              <p className="text-[15px] text-gray-500 mt-2 leading-relaxed">{desc}</p>
-            </li>
-          ))}
-        </ol>
+        <div className="mt-12 grid lg:grid-cols-[1fr_260px] gap-10 items-center">
+          <DashboardShot />
+          <PhoneShot />
+        </div>
+        <p className="mt-4 text-xs text-gray-400">Captures d’écran avec des données d’exemple.</p>
+      </section>
+
+      {/* Fonctionnement : section pleine en dégradé */}
+      <section id="fonctionnement" className="relative overflow-hidden bg-brand-gradient text-white scroll-mt-16">
+        <div aria-hidden="true" className="pointer-events-none absolute right-0 top-0 h-[420px] w-[420px] rounded-full bg-brand-cyan opacity-25 blur-[120px]" />
+        <div className="relative max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-28">
+          <div className="max-w-2xl">
+            <p className="text-[13px] font-semibold uppercase tracking-wider text-blue-100">Fonctionnement</p>
+            <h2 className="font-display text-3xl md:text-[44px] leading-tight font-semibold mt-2 text-balance text-white">
+              De la visite à la signature, sans repasser par le bureau
+            </h2>
+          </div>
+          <ol className="grid md:grid-cols-3 gap-4 mt-12">
+            {STEPS.map(({ icon: Icon, title, desc }, i) => (
+              <li key={title} className="rounded-md bg-white/10 p-6 backdrop-blur-sm ring-1 ring-white/15">
+                <div className="flex items-center justify-between">
+                  <span className="flex h-9 w-9 items-center justify-center rounded bg-white text-blue-600"><Icon className="h-4 w-4" /></span>
+                  <span className="font-mono text-sm text-white/60 tabular">0{i + 1}</span>
+                </div>
+                <h3 className="text-lg font-semibold mt-6 text-white">{title}</h3>
+                <p className="text-[15px] text-blue-50/90 mt-2 leading-relaxed">{desc}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
 
       {/* Avantages */}
-      <section id="avantages" className="bg-gray-50 border-y border-gray-200 scroll-mt-16">
+      <section className="max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-28">
+        <div className="max-w-2xl">
+          <p className="text-[13px] font-semibold uppercase tracking-wider text-blue-600">Avantages</p>
+          <h2 className="font-display text-3xl md:text-[44px] leading-tight font-semibold mt-2 text-balance">
+            Moins de paperasse, plus de devis signés
+          </h2>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4 mt-12">
+          {REASONS.map(({ icon: Icon, title, desc }) => (
+            <div key={title} className="rounded-md border border-gray-200 p-6 md:p-8">
+              <span className="flex h-10 w-10 items-center justify-center rounded bg-brand-gradient text-white"><Icon className="h-5 w-5" /></span>
+              <h3 className="text-lg font-semibold mt-5">{title}</h3>
+              <p className="text-[15px] text-gray-500 mt-1.5 leading-relaxed">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Tarifs */}
+      <section id="tarifs" className="bg-blue-50 scroll-mt-16">
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-28">
           <div className="max-w-2xl">
-            <p className="text-[13px] font-medium text-blue-600">Avantages</p>
-            <h2 className="font-display text-3xl md:text-[40px] leading-tight font-semibold mt-2 text-balance">
-              Moins de paperasse, plus de devis signés
-            </h2>
+            <p className="text-[13px] font-semibold uppercase tracking-wider text-blue-600">Tarifs</p>
+            <h2 className="font-display text-3xl md:text-[44px] leading-tight font-semibold mt-2">Trois formules, sans surprise</h2>
+            <p className="text-gray-600 mt-3">14 jours gratuits sur chaque formule. Prix TTC, sans engagement.</p>
           </div>
-          <div className="grid sm:grid-cols-2 mt-12 rounded-xl border border-gray-200 bg-white overflow-hidden">
-            {REASONS.map(({ icon: Icon, title, desc }, i) => (
+          <div className="grid md:grid-cols-3 gap-4 mt-12">
+            {PLANS.map(plan => (
               <div
-                key={title}
-                className={`p-6 md:p-8 ${i % 2 === 1 ? 'sm:border-l' : ''} ${i > 0 ? 'border-t' : ''} ${i === 1 ? 'sm:border-t-0' : ''} border-gray-200`}
+                key={plan.name}
+                className={`relative rounded-md bg-white p-6 flex flex-col overflow-hidden ${plan.highlighted ? 'ring-2 ring-blue-600' : 'border border-blue-100'}`}
               >
-                <Icon className="h-5 w-5 text-blue-600" />
-                <h3 className="text-base font-semibold mt-4">{title}</h3>
-                <p className="text-[15px] text-gray-500 mt-1.5 leading-relaxed">{desc}</p>
+                {plan.highlighted && <div className="absolute inset-x-0 top-0 h-1 bg-brand-gradient" aria-hidden="true" />}
+                <div className="flex items-center justify-between">
+                  <p className="font-display text-base font-semibold">{plan.name}</p>
+                  {plan.highlighted && <span className="rounded bg-blue-600 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-white">Le plus choisi</span>}
+                </div>
+                <div className="flex items-baseline gap-1 mt-5">
+                  <span className="font-display tabular text-4xl font-semibold">{plan.price} €</span>
+                  <span className="text-sm text-gray-500">/ mois</span>
+                </div>
+                <p className="text-sm text-gray-500 mt-1">{plan.quota}</p>
+                <ul className="space-y-2.5 mt-6 pt-5 border-t border-gray-200 flex-1">
+                  {plan.features.map(f => (
+                    <li key={f} className="flex items-start gap-2 text-sm text-gray-700">
+                      <Check className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />{f}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/signup" className="mt-8">
+                  <Button variant={plan.highlighted ? 'default' : 'outline'} className="w-full h-10">Essayer gratuitement</Button>
+                </Link>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Tarifs */}
-      <section id="tarifs" className="max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-28 scroll-mt-16">
-        <div className="max-w-2xl">
-          <p className="text-[13px] font-medium text-blue-600">Tarifs</p>
-          <h2 className="font-display text-3xl md:text-[40px] leading-tight font-semibold mt-2">Trois formules, sans surprise</h2>
-          <p className="text-gray-500 mt-3">14 jours gratuits sur chaque formule. Prix TTC, sans engagement.</p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-4 mt-12">
-          {PLANS.map(plan => (
-            <div
-              key={plan.name}
-              className={`rounded-xl bg-white p-6 flex flex-col ${plan.highlighted ? 'border border-gray-900 ring-1 ring-gray-900' : 'border border-gray-200'}`}
-            >
-              <div className="flex items-center justify-between">
-                <p className="font-display text-base font-semibold">{plan.name}</p>
-                {plan.highlighted && <span className="text-[11px] font-medium uppercase tracking-wider text-blue-600">Le plus choisi</span>}
-              </div>
-              <div className="flex items-baseline gap-1 mt-5">
-                <span className="font-display tabular text-4xl font-semibold">{plan.price} €</span>
-                <span className="text-sm text-gray-500">/ mois</span>
-              </div>
-              <p className="text-sm text-gray-500 mt-1">{plan.quota}</p>
-              <ul className="space-y-2.5 mt-6 pt-5 border-t border-gray-200 flex-1">
-                {plan.features.map(f => (
-                  <li key={f} className="flex items-start gap-2 text-sm text-gray-700">
-                    <Check className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />{f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/signup" className="mt-8">
-                <Button variant={plan.highlighted ? 'default' : 'outline'} className="w-full h-10">Essayer gratuitement</Button>
-              </Link>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Appel final */}
-      <section className="bg-gray-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-24 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+      {/* Appel final : aplat bleu et lueur violette */}
+      <section className="relative overflow-hidden bg-blue-600 text-white">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-32 -top-40 h-[480px] w-[480px] rounded-full bg-brand-violet opacity-70 blur-[120px]" />
+        <div className="relative max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-24 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
           <div className="max-w-xl">
-            <h2 className="font-display text-3xl md:text-[40px] leading-tight font-semibold text-white">Votre prochain devis part aujourd’hui.</h2>
-            <p className="text-gray-400 mt-3 text-lg">Créez votre compte en une minute. Aucun prélèvement pendant 14 jours.</p>
+            <h2 className="font-display text-3xl md:text-[44px] leading-tight font-semibold text-white">Votre prochain devis part aujourd’hui.</h2>
+            <p className="text-blue-100 mt-3 text-lg">Créez votre compte en une minute. Aucun prélèvement pendant 14 jours.</p>
           </div>
           <Link href="/signup">
-            <Button className="h-11 px-5 text-[15px] gap-2 bg-white text-gray-900 hover:bg-gray-100 w-full md:w-auto">
+            <Button className="h-12 px-6 text-[15px] gap-2 w-full md:w-auto shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)]">
               Commencer l’essai <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>

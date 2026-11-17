@@ -61,7 +61,7 @@ export function AppSidebar({ userEmail, companyName }: AppSidebarProps) {
 
       {/* Marque + entreprise */}
       <div className="flex items-center gap-2.5 px-4 h-14 border-b border-gray-200">
-        <div className="w-6 h-6 bg-gray-900 rounded-md flex items-center justify-center flex-shrink-0">
+        <div className="w-6 h-6 bg-brand-gradient rounded-[5px] flex items-center justify-center flex-shrink-0">
           <span className="font-display text-white text-[13px] font-bold leading-none">K</span>
         </div>
         <div className="min-w-0">
