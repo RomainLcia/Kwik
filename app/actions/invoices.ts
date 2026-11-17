@@ -14,73 +14,17 @@ async function getContext() {
 }
 
 export async function createInvoiceFromQuote(quoteId: string) {
-  const { supabase, company } = await getContext()
+  const { supabase } = await getContext()
 
-  const [{ data: quote }, { data: lines }] = await Promise.all([
-    supabase.from('quotes').select('*').eq('id', quoteId).eq('company_id', company.id).single(),
-    supabase.from('quote_lines').select('*').eq('quote_id', quoteId).order('position'),
-  ])
+  // Tout se fait dans une seule transaction côté base (voir la fonction SQL
+  // create_invoice_from_quote) : numéro, facture, lignes et événement.
+  // Pas de trou ni de doublon dans la numérotation, et un double clic renvoie la même facture.
+  const { data: invoiceId, error } = await supabase.rpc('create_invoice_from_quote', { p_quote_id: quoteId })
 
-  if (!quote) return { error: 'Devis introuvable' }
-
-  // Génère le numéro de facture
-  const newCounter = (company.invoice_counter ?? 0) + 1
-  await supabase.from('companies').update({ invoice_counter: newCounter }).eq('id', company.id)
-  const year = new Date().getFullYear()
-  const prefix = company.invoice_prefix ?? 'FAC'
-  const invoiceNumber = `${prefix}-${year}-${String(newCounter).padStart(3, '0')}`
-
-  const today = new Date().toISOString().split('T')[0]
-  const in30Days = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0]
-
-  const { data: invoice, error } = await supabase.from('invoices').insert({
-    company_id: company.id,
-    client_id: quote.client_id,
-    quote_id: quoteId,
-    number: invoiceNumber,
-    object: quote.object,
-    issue_date: today,
-    due_date: in30Days,
-    status: 'draft',
-    payment_status: 'unpaid',
-    subtotal_ht: quote.subtotal_ht,
-    discount_amount: quote.discount_amount,
-    discount_percent: quote.discount_percent,
-    total_ht: quote.total_ht,
-    total_vat: quote.total_vat,
-    total_ttc: quote.total_ttc,
-    notes: quote.notes,
-    terms: quote.terms,
-  }).select('id').single()
-
-  if (error || !invoice) return { error: 'Erreur lors de la création de la facture' }
-
-  if (lines && lines.length > 0) {
-    await supabase.from('invoice_lines').insert(
-      lines.map(line => ({
-        invoice_id: invoice.id,
-        position: line.position,
-        label: line.label,
-        description: line.description,
-        quantity: line.quantity,
-        unit: line.unit,
-        price_ht: line.price_ht,
-        vat_rate: line.vat_rate,
-        line_total_ht: line.line_total_ht,
-        line_total_ttc: line.line_total_ttc,
-      }))
-    )
-  }
-
-  await supabase.from('events').insert({
-    company_id: company.id,
-    entity_type: 'invoice',
-    entity_id: invoice.id,
-    event_type: 'converted',
-  })
+  if (error || !invoiceId) return { error: 'Erreur lors de la création de la facture' }
 
   revalidatePath('/invoices')
-  redirect(`/invoices/${invoice.id}`)
+  redirect(`/invoices/${invoiceId}`)
 }
 
 export async function markInvoicePaid(invoiceId: string) {

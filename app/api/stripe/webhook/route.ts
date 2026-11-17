@@ -69,6 +69,16 @@ export async function POST(req: NextRequest) {
     const sub = event.data.object as Stripe.Subscription
     const customerId = sub.customer as string
 
+    // Montant réel de la formule choisie (et non un prix figé)
+    const price = sub.items.data[0]?.price
+    const PLAN_LABELS: Record<string, string> = { basic: 'Basique', pro: 'Pro', unlimited: 'Illimité' }
+    const subPlan = price?.id ? PRICE_TO_PLAN[price.id] : undefined
+    const amount = price?.unit_amount != null
+      ? (price.unit_amount / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
+      : null
+    const planText = [subPlan ? `Kwik ${PLAN_LABELS[subPlan]}` : 'Kwik', amount ? `à <strong>${amount}/mois</strong>` : '']
+      .filter(Boolean).join(' ')
+
     const { data: company } = await supabase
       .from('companies')
       .select('name, contact_email')
@@ -94,7 +104,7 @@ export async function POST(req: NextRequest) {
     </div>
     <div style="background:white;padding:28px;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 10px 10px;">
       <p style="margin:0 0 16px;font-size:15px;">Bonjour <strong>${company.name}</strong>,</p>
-      <p style="margin:0 0 16px;font-size:14px;color:#4B5563;">Votre période d'essai gratuite se termine dans <strong>3 jours</strong>. Pour continuer à utiliser Kwik sans interruption, votre abonnement à <strong>19,99 €/mois</strong> sera activé automatiquement.</p>
+      <p style="margin:0 0 16px;font-size:14px;color:#4B5563;">Votre période d'essai gratuite se termine dans <strong>3 jours</strong>. Pour continuer à utiliser Kwik sans interruption, votre abonnement ${planText} sera activé automatiquement.</p>
       <p style="margin:0 0 24px;font-size:14px;color:#4B5563;">Vous pouvez gérer ou annuler votre abonnement à tout moment depuis votre espace.</p>
       <a href="https://www.kwik-devis.fr/subscribe" style="display:inline-block;background:#2563EB;color:white;padding:13px 26px;border-radius:7px;text-decoration:none;font-weight:600;font-size:15px;">Gérer mon abonnement →</a>
     </div>

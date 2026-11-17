@@ -30,7 +30,11 @@ create table public.companies (
   invoice_counter integer default 0,
   legal_mentions text,
   created_at timestamptz default now(),
-  updated_at timestamptz default now()
+  updated_at timestamptz default now(),
+  -- Abonnement (mis à jour par le webhook Stripe)
+  subscription_status text default 'trial',  -- trial | active | past_due | canceled
+  stripe_customer_id text,
+  plan text default 'basic'                   -- basic | pro | unlimited
 );
 
 -- ============================================================
@@ -253,12 +257,9 @@ create policy "events: company isolation" on public.events
     company_id in (select id from public.companies where user_id = auth.uid())
   );
 
--- Politique publique pour la page de signature (lecture seule via token)
-create policy "quotes: public read via token" on public.quotes
-  for select using (public_token is not null);
-
-create policy "invoices: public read via token" on public.invoices
-  for select using (public_token is not null);
+-- Pas de lecture publique : la page de signature /q/[token] et les PDF publics
+-- passent par la clé service côté serveur et filtrent eux-mêmes sur le token.
+-- (Les anciennes règles "public read via token" exposaient tous les devis ; supprimées le 17/11/2026.)
 
 -- ============================================================
 -- INDEXES pour les performances
@@ -283,7 +284,7 @@ begin
   new.updated_at = now();
   return new;
 end;
-$$ language plpgsql;
+$$ language plpgsql set search_path = '';
 
 create trigger set_updated_at before update on public.companies
   for each row execute function public.handle_updated_at();
@@ -295,3 +296,95 @@ create trigger set_updated_at before update on public.quotes
   for each row execute function public.handle_updated_at();
 create trigger set_updated_at before update on public.invoices
   for each row execute function public.handle_updated_at();
+
+-- ============================================================
+-- NUMÉROTATION (atomique, appelée par l'app via supabase.rpc)
+-- ============================================================
+create unique index if not exists invoices_company_number_key on public.invoices (company_id, number);
+
+-- Numéro de devis suivant pour l'entreprise de l'utilisateur connecté
+create or replace function public.next_quote_number()
+returns text
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+declare
+  v_counter int;
+  v_prefix text;
+begin
+  update public.companies
+     set quote_counter = coalesce(quote_counter, 0) + 1
+   where user_id = auth.uid()
+  returning quote_counter, coalesce(nullif(quote_prefix, ''), 'DEV') into v_counter, v_prefix;
+  if v_counter is null then
+    raise exception 'Entreprise introuvable';
+  end if;
+  return v_prefix || '-' || extract(year from now())::int || '-' || lpad(v_counter::text, 3, '0');
+end;
+$$;
+
+-- Facture depuis un devis, en une seule transaction (numéro sans trou ni doublon).
+-- Renvoie la facture existante si le devis a déjà été converti.
+create or replace function public.create_invoice_from_quote(p_quote_id uuid)
+returns uuid
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+declare
+  v_company public.companies%rowtype;
+  v_quote public.quotes%rowtype;
+  v_invoice_id uuid;
+  v_counter int;
+  v_number text;
+begin
+  select * into v_company from public.companies where user_id = auth.uid() for update;
+  if not found then
+    raise exception 'Entreprise introuvable';
+  end if;
+
+  select * into v_quote from public.quotes where id = p_quote_id and company_id = v_company.id;
+  if not found then
+    raise exception 'Devis introuvable';
+  end if;
+
+  select id into v_invoice_id from public.invoices
+   where quote_id = p_quote_id and company_id = v_company.id
+   limit 1;
+  if v_invoice_id is not null then
+    return v_invoice_id;
+  end if;
+
+  v_counter := coalesce(v_company.invoice_counter, 0) + 1;
+  v_number := coalesce(nullif(v_company.invoice_prefix, ''), 'FAC') || '-' || extract(year from now())::int || '-' || lpad(v_counter::text, 3, '0');
+
+  update public.companies set invoice_counter = v_counter where id = v_company.id;
+
+  insert into public.invoices (
+    company_id, client_id, quote_id, number, object, issue_date, due_date,
+    status, payment_status, subtotal_ht, discount_amount, discount_percent,
+    total_ht, total_vat, total_ttc, notes, terms
+  ) values (
+    v_company.id, v_quote.client_id, v_quote.id, v_number, v_quote.object, current_date, current_date + 30,
+    'draft', 'unpaid', v_quote.subtotal_ht, v_quote.discount_amount, v_quote.discount_percent,
+    v_quote.total_ht, v_quote.total_vat, v_quote.total_ttc, v_quote.notes, v_quote.terms
+  ) returning id into v_invoice_id;
+
+  insert into public.invoice_lines (
+    invoice_id, position, label, description, quantity, unit, price_ht, vat_rate, line_total_ht, line_total_ttc
+  )
+  select v_invoice_id, position, label, description, quantity, unit, price_ht, vat_rate, line_total_ht, line_total_ttc
+    from public.quote_lines where quote_id = v_quote.id;
+
+  insert into public.events (company_id, entity_type, entity_id, event_type)
+  values (v_company.id, 'invoice', v_invoice_id, 'converted');
+
+  return v_invoice_id;
+end;
+$$;
+
+revoke execute on function public.next_quote_number() from public, anon;
+revoke execute on function public.create_invoice_from_quote(uuid) from public, anon;
+grant execute on function public.next_quote_number() to authenticated;
+grant execute on function public.create_invoice_from_quote(uuid) to authenticated;

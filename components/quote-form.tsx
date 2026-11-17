@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { saveQuote, type QuoteLine, type QuoteData } from '@/app/actions/quotes'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -44,7 +45,7 @@ function calcLine(line: Line): Line {
 }
 
 interface QuoteFormProps {
-  quoteNumber: string
+  quoteNumber?: string
   companyId: string
   vatApplicable: boolean
   clients: Client[]
@@ -64,7 +65,9 @@ export function QuoteForm({
   // Form state
   const [quoteId, setQuoteId] = useState<string | undefined>(existingQuote?.id)
   const [clientId, setClientId] = useState(existingQuote?.client_id ?? '')
-  const [number] = useState(existingQuote?.number ?? quoteNumber)
+  const [number, setNumber] = useState(existingQuote?.number ?? quoteNumber ?? '')
+  const savingRef = useRef(false)
+  const doSaveRef = useRef<() => void>(() => {})
   const [object, setObject] = useState(existingQuote?.object ?? '')
   const [issueDate, setIssueDate] = useState(existingQuote?.issue_date ?? today)
   const [validityDate, setValidityDate] = useState(existingQuote?.validity_date ?? in30Days)
@@ -98,11 +101,21 @@ export function QuoteForm({
 
   // Auto-save debounced
   const doSave = useCallback(async () => {
+    // Un nouveau devis vide n'est pas enregistré (évite de créer un devis et de consommer un numéro
+    // à chaque simple ouverture de la page)
+    const isEmpty = !clientId && !object.trim() && lines.every(l => !l.label.trim() && l.line_total_ht === 0)
+    if (!quoteId && isEmpty) return
+    // Évite deux créations en parallèle si un enregistrement est déjà en cours
+    if (savingRef.current) {
+      if (saveTimeout.current) clearTimeout(saveTimeout.current)
+      saveTimeout.current = setTimeout(() => doSaveRef.current(), 1000)
+      return
+    }
+    savingRef.current = true
     setSaving(true)
     const result = await saveQuote({
       id: quoteId,
       client_id: clientId || null,
-      number,
       object,
       issue_date: issueDate,
       validity_date: validityDate,
@@ -117,13 +130,20 @@ export function QuoteForm({
       deposit_percent: null,
       lines: lines.map((l, i) => ({ ...l, position: i })),
     })
-    if (result.id && !quoteId) setQuoteId(result.id)
+    savingRef.current = false
     setSaving(false)
+    if ('error' in result && result.error) {
+      toast.error(result.error)
+      return
+    }
+    if (result.id && !quoteId) setQuoteId(result.id)
+    if (result.number) setNumber(result.number)
     setSavedAt(new Date())
-  }, [quoteId, clientId, number, object, issueDate, validityDate, notes, terms,
+  }, [quoteId, clientId, object, issueDate, validityDate, notes, terms,
     discountPercent, discountAmount, subtotalHT, totalHT, totalVAT, totalTTC, lines])
 
   useEffect(() => {
+    doSaveRef.current = doSave
     if (saveTimeout.current) clearTimeout(saveTimeout.current)
     saveTimeout.current = setTimeout(doSave, 2500)
     return () => { if (saveTimeout.current) clearTimeout(saveTimeout.current) }
@@ -190,7 +210,7 @@ export function QuoteForm({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label>N° de devis</Label>
-              <Input value={number} readOnly className="bg-gray-50 text-gray-500" />
+              <Input value={number} placeholder="Attribué au premier enregistrement" readOnly className="bg-gray-50 text-gray-500" />
             </div>
             <div className="space-y-1.5">
               <Label>Client</Label>
