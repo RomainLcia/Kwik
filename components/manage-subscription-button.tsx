@@ -15,7 +15,7 @@ export function ManageSubscriptionButton() {
   }
 
   return (
-    <Button onClick={handleClick} disabled={loading} variant="outline" className="w-full">
+    <Button onClick={handleClick} disabled={loading} variant="outline" className="w-full h-10">
       {loading ? 'Chargement...' : 'Gérer mon abonnement'}
     </Button>
   )

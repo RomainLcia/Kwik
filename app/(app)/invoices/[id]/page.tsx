@@ -43,7 +43,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
   }, {} as Record<number, number>)
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
+    <div className="max-w-2xl mx-auto px-4 md:px-8 py-6 md:py-10">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <Link href="/invoices">
@@ -51,7 +51,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
         </Link>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-gray-900">{invoice.number}</h1>
+            <h1 className="text-2xl md:text-[28px] font-semibold text-gray-900">{invoice.number}</h1>
             <InvoicePaymentBadge status={invoice.payment_status} />
           </div>
           <p className="text-sm text-gray-400 mt-0.5">
@@ -138,7 +138,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
               <p className="text-xs text-gray-400 italic">TVA non applicable, art. 293 B du CGI</p>
             )}
             <Separator />
-            <div className="flex justify-between font-bold text-base">
+            <div className="flex justify-between font-semibold text-base">
               <span>Total TTC</span>
               <span className="text-blue-600">{Number(invoice.total_ttc).toFixed(2)} €</span>
             </div>

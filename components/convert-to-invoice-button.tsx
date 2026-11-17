@@ -26,7 +26,7 @@ export function ConvertToInvoiceButton({ quoteId }: { quoteId: string }) {
   }
 
   return (
-    <Button onClick={handleConvert} disabled={loading} size="sm" className="bg-blue-600 hover:bg-blue-700">
+    <Button onClick={handleConvert} disabled={loading} size="sm" className="bg-gray-900 hover:bg-gray-800">
       <FileText className="h-4 w-4 mr-2" />
       {loading ? 'Création...' : 'Créer la facture'}
     </Button>

@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-heading: var(--font-inter-tight), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -48,31 +48,61 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Palette « Net et précis » : remplace les bleus et gris de Tailwind partout dans l'app */
+@theme {
+  --color-blue-50: #EEF2FF;
+  --color-blue-100: #E0E7FF;
+  --color-blue-200: #C7D2FE;
+  --color-blue-300: #A5B4FC;
+  --color-blue-400: #7C8DFD;
+  --color-blue-500: #5B72FD;
+  --color-blue-600: #3B5BFD;
+  --color-blue-700: #2C45E0;
+  --color-blue-800: #2437B5;
+  --color-blue-900: #1F2F8C;
+  --color-blue-950: #151E57;
+
+  --color-gray-50: #F6F7F9;
+  --color-gray-100: #EEF0F3;
+  --color-gray-200: #E3E6EB;
+  --color-gray-300: #CDD2DA;
+  --color-gray-400: #9AA1AD;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4D5461;
+  --color-gray-700: #363B45;
+  --color-gray-800: #22262E;
+  --color-gray-900: #0E1117;
+  --color-gray-950: #07090C;
+
+  --color-ink: #0E1117;
+  --color-accent-blue: #3B5BFD;
+}
+
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --background: #FFFFFF;
+  --foreground: #0E1117;
+  --card: #FFFFFF;
+  --card-foreground: #0E1117;
+  --popover: #FFFFFF;
+  --popover-foreground: #0E1117;
+  --primary: #0E1117;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EEF0F3;
+  --secondary-foreground: #0E1117;
+  --muted: #F6F7F9;
+  --muted-foreground: #6B7280;
+  --accent: #EEF0F3;
+  --accent-foreground: #0E1117;
+  --destructive: #DC2626;
+  --border: #E3E6EB;
+  --input: #E3E6EB;
+  --ring: #3B5BFD;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
+  --radius: 0.5rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -127,4 +157,16 @@
   html {
     @apply font-sans;
   }
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+  }
+  ::selection {
+    background: #C7D2FE;
+  }
+}
+
+@layer utilities {
+  .tabular { font-variant-numeric: tabular-nums; }
+  .font-display { font-family: var(--font-heading); letter-spacing: -0.03em; }
 }

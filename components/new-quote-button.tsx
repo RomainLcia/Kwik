@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Plus, Loader2 } from 'lucide-react'
 
-export function NewQuoteButton() {
+export function NewQuoteButton({ className }: { className?: string }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
@@ -15,12 +15,12 @@ export function NewQuoteButton() {
   }
 
   return (
-    <Button onClick={handleClick} disabled={loading}>
+    <Button onClick={handleClick} disabled={loading} className={`h-9 px-3.5 gap-1.5 ${className ?? ''}`}>
       {loading
-        ? <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-        : <Plus className="h-4 w-4 mr-2" />
+        ? <Loader2 className="h-4 w-4 animate-spin" />
+        : <Plus className="h-4 w-4" />
       }
-      {loading ? 'Chargement...' : 'Nouveau devis'}
+      {loading ? 'Ouverture…' : 'Nouveau devis'}
     </Button>
   )
 }

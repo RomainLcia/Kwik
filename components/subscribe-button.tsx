@@ -19,7 +19,7 @@ export function SubscribeButton({ plan = 'basic', label }: { plan?: string; labe
   }
 
   return (
-    <Button onClick={handleClick} disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700">
+    <Button onClick={handleClick} disabled={loading} className="w-full h-10">
       {loading ? 'Chargement...' : (label ?? 'Commencer l\'essai gratuit →')}
     </Button>
   )

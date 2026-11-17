@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { sendWelcomeEmail } from '@/app/actions/send-welcome'
+import { KwikLogo } from '@/components/kwik-logo'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -63,10 +64,10 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-xl">
-        <div className="text-center mb-8">
-          <span className="text-2xl font-bold text-gray-900">Kwik</span>
+        <div className="flex flex-col items-center gap-2 mb-8">
+          <KwikLogo href={null} />
           <p className="text-gray-500 mt-1">Configurez votre profil pour commencer</p>
         </div>
 

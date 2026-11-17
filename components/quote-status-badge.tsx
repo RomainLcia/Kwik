@@ -1,18 +1,17 @@
-import { Badge } from '@/components/ui/badge'
-
-const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
-  draft:    { label: 'Brouillon',  className: 'bg-gray-100 text-gray-600' },
-  sent:     { label: 'Envoyé',     className: 'bg-blue-100 text-blue-700' },
-  viewed:   { label: 'Consulté',   className: 'bg-yellow-100 text-yellow-700' },
-  accepted: { label: 'Accepté',    className: 'bg-green-100 text-green-700' },
-  rejected: { label: 'Refusé',     className: 'bg-red-100 text-red-700' },
-  expired:  { label: 'Expiré',     className: 'bg-orange-100 text-orange-700' },
+const STATUS_CONFIG: Record<string, { label: string; dot: string }> = {
+  draft:    { label: 'Brouillon', dot: 'bg-gray-400' },
+  sent:     { label: 'Envoyé',    dot: 'bg-blue-600' },
+  viewed:   { label: 'Consulté',  dot: 'bg-amber-500' },
+  accepted: { label: 'Accepté',   dot: 'bg-emerald-500' },
+  rejected: { label: 'Refusé',    dot: 'bg-red-500' },
+  expired:  { label: 'Expiré',    dot: 'bg-orange-500' },
 }
 
 export function QuoteStatusBadge({ status }: { status: string }) {
   const config = STATUS_CONFIG[status] ?? STATUS_CONFIG.draft
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.className}`}>
+    <span className="inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2 py-0.5 text-xs font-medium text-gray-700 whitespace-nowrap">
+      <span className={`h-1.5 w-1.5 rounded-full ${config.dot}`} aria-hidden="true" />
       {config.label}
     </span>
   )

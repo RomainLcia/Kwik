@@ -110,7 +110,7 @@ export function ClientsList({ initialClients }: { initialClients: Client[] }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
+          <h1 className="text-2xl md:text-[28px] font-semibold text-gray-900">Clients</h1>
           <p className="text-gray-500 text-sm mt-1">{initialClients.length} client{initialClients.length > 1 ? 's' : ''}</p>
         </div>
         <Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4 mr-2" />Nouveau client</Button>

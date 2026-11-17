@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { KwikLogo } from '@/components/kwik-logo'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -46,11 +47,11 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-gray-900">Kwik</Link>
-          <p className="text-gray-500 mt-1 text-sm">14 jours gratuits</p>
+        <div className="flex flex-col items-center gap-2 mb-8">
+          <KwikLogo />
+          <p className="text-gray-500 text-sm">14 jours gratuits, sans engagement</p>
         </div>
 
         <Card>

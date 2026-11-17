@@ -23,10 +23,10 @@ export default async function NewQuotePage() {
     return (
       <div className="max-w-md mx-auto px-4 py-16 text-center">
         <div className="text-4xl mb-4">🚫</div>
-        <h1 className="text-xl font-bold text-gray-900 mb-2">Limite atteinte</h1>
+        <h1 className="text-2xl md:text-[28px] font-semibold text-gray-900 mb-2">Limite atteinte</h1>
         <p className="text-gray-500 mb-6">{prepared.error}</p>
         <Link href="/subscribe">
-          <Button className="bg-blue-600 hover:bg-blue-700">Changer de plan →</Button>
+          <Button className="bg-gray-900 hover:bg-gray-800">Changer de plan →</Button>
         </Link>
       </div>
     )

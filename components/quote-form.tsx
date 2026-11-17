@@ -189,11 +189,11 @@ export function QuoteForm({
   )
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6 pb-32">
+    <div className="max-w-2xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-32">
       {/* Header page */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">{existingQuote ? 'Modifier' : 'Nouveau'} devis</h1>
+          <h1 className="text-2xl md:text-[28px] font-semibold text-gray-900">{existingQuote ? 'Modifier' : 'Nouveau'} devis</h1>
           <p className="text-sm text-gray-400 mt-0.5">
             {saving ? 'Enregistrement...' : savedAt ? `Sauvegardé` : 'Non sauvegardé'}
           </p>
@@ -320,7 +320,7 @@ export function QuoteForm({
                   </button>
 
                   {expanded && (
-                    <div className="space-y-2 pt-1 border-t border-gray-100">
+                    <div className="space-y-2 pt-1 border-t border-gray-200">
                       <div className="grid grid-cols-2 gap-2">
                         <div>
                           <Label className="text-xs text-gray-500">Unité</Label>
@@ -414,7 +414,7 @@ export function QuoteForm({
 
           <Separator />
 
-          <div className="flex justify-between font-bold text-lg">
+          <div className="flex justify-between font-semibold text-lg">
             <span>Total TTC</span>
             <span className="text-blue-600">{totalTTC.toFixed(2)} €</span>
           </div>

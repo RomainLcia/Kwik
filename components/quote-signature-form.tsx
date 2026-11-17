@@ -97,7 +97,7 @@ export function QuoteSignatureForm({ quoteId, publicToken }: QuoteSignatureFormP
         <Button
           onClick={handleSign}
           disabled={loading || !name.trim() || !accepted}
-          className="flex-1 bg-blue-600 hover:bg-blue-700"
+          className="flex-1 bg-gray-900 hover:bg-gray-800"
         >
           <CheckCircle className="h-4 w-4 mr-2" />
           {loading ? 'Signature...' : 'Signer et accepter'}

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { KwikLogo } from '@/components/kwik-logo'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Mail } from 'lucide-react'
@@ -7,8 +8,8 @@ export default function VerifyEmailPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-gray-900">Kwik</Link>
+        <div className="flex flex-col items-center gap-2 mb-8">
+          <KwikLogo />
         </div>
 
         <Card>

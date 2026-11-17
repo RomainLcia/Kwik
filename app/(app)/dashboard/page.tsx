@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Card, CardContent } from '@/components/ui/card'
 import { QuoteStatusBadge } from '@/components/quote-status-badge'
 import { NewQuoteButton } from '@/components/new-quote-button'
 import { TrendingUp, Clock, Euro, CheckCircle, ArrowRight, FileText } from 'lucide-react'
@@ -46,128 +45,110 @@ export default async function DashboardPage() {
   const accepted = quotes.filter(q => q.status === 'accepted').length
   const acceptRate = responded > 0 ? Math.round((accepted / responded) * 100) : null
 
+  const eur = (n: number) => n.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €'
+
   const kpis = [
-    {
-      label: 'CA du mois',
-      value: caThisMonth.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €',
-      icon: TrendingUp,
-      iconBg: 'bg-emerald-50',
-      iconColor: 'text-emerald-600',
-      valueColor: 'text-gray-900',
-    },
-    {
-      label: 'Devis en attente',
-      value: String(quotesWaiting),
-      icon: Clock,
-      iconBg: 'bg-blue-50',
-      iconColor: 'text-blue-600',
-      valueColor: 'text-gray-900',
-    },
-    {
-      label: 'À encaisser',
-      value: invoicesUnpaid.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €',
-      icon: Euro,
-      iconBg: 'bg-amber-50',
-      iconColor: 'text-amber-600',
-      valueColor: 'text-gray-900',
-    },
-    {
-      label: "Taux d'acceptation",
-      value: acceptRate !== null ? `${acceptRate} %` : '—',
-      icon: CheckCircle,
-      iconBg: 'bg-violet-50',
-      iconColor: 'text-violet-600',
-      valueColor: 'text-gray-900',
-    },
+    { label: 'Encaissé ce mois', value: eur(caThisMonth), hint: 'Factures payées', icon: TrendingUp },
+    { label: 'Devis en attente', value: String(quotesWaiting), hint: 'Envoyés ou consultés', icon: Clock },
+    { label: 'À encaisser', value: eur(invoicesUnpaid), hint: 'Factures non payées', icon: Euro },
+    { label: "Taux d'acceptation", value: acceptRate !== null ? `${acceptRate} %` : '—', hint: 'Sur les devis répondus', icon: CheckCircle },
   ]
 
+  const recent = recentQuotesRes.data ?? []
+
   return (
-    <div className="max-w-5xl mx-auto px-4 md:px-6 py-6 md:py-8">
+    <div className="max-w-5xl mx-auto px-4 md:px-8 py-6 md:py-10">
 
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6 md:mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
-          <p className="text-sm text-gray-400 mt-1 capitalize">{format(now, 'EEEE d MMMM yyyy', { locale: fr })}</p>
+      {/* En-tête */}
+      <div className="flex items-end justify-between gap-4 mb-8">
+        <div className="min-w-0">
+          <p className="text-[13px] text-gray-500 capitalize">{format(now, 'EEEE d MMMM', { locale: fr })}</p>
+          <h1 className="text-2xl md:text-[28px] font-semibold text-gray-900 mt-0.5 truncate">{company.name}</h1>
         </div>
-        <NewQuoteButton />
+        <div className="md:hidden"><NewQuoteButton /></div>
       </div>
 
-      {/* KPIs */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {kpis.map(({ label, value, icon: Icon, iconBg, iconColor, valueColor }) => (
-          <Card key={label} className="border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-            <CardContent className="p-5">
-              <div className={`inline-flex items-center justify-center w-9 h-9 rounded-xl ${iconBg} mb-4`}>
-                <Icon className={`h-4 w-4 ${iconColor}`} />
-              </div>
-              <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">{label}</p>
-              <p className={`text-2xl font-bold ${valueColor}`}>{value}</p>
-            </CardContent>
-          </Card>
+      {/* Indicateurs : une seule bande, séparée par des filets */}
+      <section aria-label="Indicateurs" className="grid grid-cols-2 lg:grid-cols-4 rounded-xl border border-gray-200 bg-white overflow-hidden mb-8">
+        {kpis.map(({ label, value, hint, icon: Icon }, i) => (
+          <div
+            key={label}
+            className={[
+              'p-4 md:p-5',
+              i % 2 === 1 ? 'border-l border-gray-200' : '',
+              i >= 2 ? 'border-t border-gray-200 lg:border-t-0' : '',
+              i === 2 ? 'lg:border-l' : '',
+            ].join(' ')}
+          >
+            <div className="flex items-center gap-1.5 text-[13px] font-medium text-gray-500">
+              <Icon className="h-3.5 w-3.5 text-gray-400" aria-hidden="true" />
+              {label}
+            </div>
+            <p className="font-display tabular text-2xl md:text-[28px] font-semibold text-gray-900 mt-2">{value}</p>
+            <p className="text-xs text-gray-400 mt-1">{hint}</p>
+          </div>
         ))}
-      </div>
+      </section>
 
       {/* Derniers devis */}
-      <Card className="border-gray-100 shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-50">
-          <h2 className="font-semibold text-gray-900">Derniers devis</h2>
-          <Link href="/quotes" className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors">
-            Voir tout <ArrowRight className="h-3 w-3" />
+      <section className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+        <div className="flex items-center justify-between px-4 md:px-5 h-12 border-b border-gray-200">
+          <h2 className="text-[15px] font-semibold text-gray-900">Derniers devis</h2>
+          <Link href="/quotes" className="flex items-center gap-1 text-[13px] font-medium text-blue-600 hover:text-blue-700">
+            Tous les devis <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
 
-        {(!recentQuotesRes.data || recentQuotesRes.data.length === 0) ? (
-          <div className="text-center py-16">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gray-50 mb-4">
-              <FileText className="h-5 w-5 text-gray-300" />
+        {recent.length === 0 ? (
+          <div className="text-center py-16 px-4">
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 mb-4">
+              <FileText className="h-5 w-5 text-gray-400" />
             </div>
-            <p className="text-sm font-medium text-gray-600 mb-1">Aucun devis pour l&apos;instant</p>
-            <p className="text-xs text-gray-400 mb-5">Créez votre premier devis en moins de 3 minutes</p>
+            <p className="text-sm font-medium text-gray-900 mb-1">Faites votre premier devis</p>
+            <p className="text-[13px] text-gray-500 mb-5">Trois minutes suffisent, depuis votre téléphone ou votre ordinateur.</p>
             <NewQuoteButton />
           </div>
         ) : (
           <div>
-            {/* En-tête table */}
-            <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-2 bg-gray-50 border-b border-gray-100">
-              <span className="col-span-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Numéro</span>
-              <span className="col-span-4 text-xs font-semibold text-gray-400 uppercase tracking-wide">Client</span>
-              <span className="col-span-2 text-xs font-semibold text-gray-400 uppercase tracking-wide">Date</span>
-              <span className="col-span-2 text-xs font-semibold text-gray-400 uppercase tracking-wide">Statut</span>
-              <span className="col-span-1 text-xs font-semibold text-gray-400 uppercase tracking-wide text-right">Montant</span>
+            <div className="hidden md:grid grid-cols-12 gap-4 px-5 h-9 items-center border-b border-gray-100 text-xs font-medium text-gray-500">
+              <span className="col-span-3">Numéro</span>
+              <span className="col-span-4">Client</span>
+              <span className="col-span-2">Date</span>
+              <span className="col-span-2">Statut</span>
+              <span className="col-span-1 text-right">TTC</span>
             </div>
-            <div className="divide-y divide-gray-50">
-              {recentQuotesRes.data.map(quote => (
-                <Link key={quote.id} href={`/quotes/${quote.id}`}>
-                  {/* Mobile card */}
-                  <div className="md:hidden flex items-center justify-between px-4 py-3.5 hover:bg-gray-50/80 transition-colors cursor-pointer">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-sm font-semibold text-gray-900">{quote.number}</span>
-                        <QuoteStatusBadge status={quote.status} />
+            <ul className="divide-y divide-gray-100">
+              {recent.map(quote => {
+                const client = (quote.clients as unknown as { name?: string } | null)?.name ?? '—'
+                const amount = eur(Number(quote.total_ttc))
+                return (
+                  <li key={quote.id}>
+                    <Link href={`/quotes/${quote.id}`} className="block hover:bg-gray-50 transition-colors">
+                      <div className="md:hidden flex items-center justify-between gap-3 px-4 py-3">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-mono text-[13px] text-gray-900">{quote.number}</span>
+                            <QuoteStatusBadge status={quote.status} />
+                          </div>
+                          <p className="text-sm text-gray-500 truncate">{client}</p>
+                        </div>
+                        <span className="tabular text-sm font-semibold text-gray-900 flex-shrink-0">{amount}</span>
                       </div>
-                      <p className="text-sm text-gray-500 truncate">{(quote.clients as any)?.name ?? '—'}</p>
-                    </div>
-                    <span className="text-sm font-bold text-gray-900 ml-3 flex-shrink-0">
-                      {Number(quote.total_ttc).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} €
-                    </span>
-                  </div>
-                  {/* Desktop table row */}
-                  <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3.5 hover:bg-gray-50/80 transition-colors cursor-pointer items-center">
-                    <span className="col-span-3 text-sm font-semibold text-gray-900">{quote.number}</span>
-                    <span className="col-span-4 text-sm text-gray-600 truncate">{(quote.clients as any)?.name ?? '—'}</span>
-                    <span className="col-span-2 text-sm text-gray-400">{format(new Date(quote.issue_date), 'd MMM', { locale: fr })}</span>
-                    <span className="col-span-2"><QuoteStatusBadge status={quote.status} /></span>
-                    <span className="col-span-1 text-sm font-bold text-gray-900 text-right">
-                      {Number(quote.total_ttc).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} €
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                      <div className="hidden md:grid grid-cols-12 gap-4 px-5 h-12 items-center">
+                        <span className="col-span-3 font-mono text-[13px] text-gray-900">{quote.number}</span>
+                        <span className="col-span-4 text-sm text-gray-700 truncate">{client}</span>
+                        <span className="col-span-2 text-sm text-gray-500">{format(new Date(quote.issue_date), 'd MMM yyyy', { locale: fr })}</span>
+                        <span className="col-span-2"><QuoteStatusBadge status={quote.status} /></span>
+                        <span className="col-span-1 tabular text-sm font-semibold text-gray-900 text-right whitespace-nowrap">{amount}</span>
+                      </div>
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
           </div>
         )}
-      </Card>
+      </section>
     </div>
   )
 }

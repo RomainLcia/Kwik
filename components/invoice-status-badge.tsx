@@ -1,7 +1,7 @@
-const PAYMENT_STYLES: Record<string, string> = {
-  unpaid: 'bg-orange-100 text-orange-700',
-  partial: 'bg-blue-100 text-blue-700',
-  paid: 'bg-green-100 text-green-700',
+const PAYMENT_DOTS: Record<string, string> = {
+  unpaid: 'bg-orange-500',
+  partial: 'bg-blue-600',
+  paid: 'bg-emerald-500',
 }
 
 const PAYMENT_LABELS: Record<string, string> = {
@@ -12,7 +12,8 @@ const PAYMENT_LABELS: Record<string, string> = {
 
 export function InvoicePaymentBadge({ status }: { status: string }) {
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${PAYMENT_STYLES[status] ?? 'bg-gray-100 text-gray-600'}`}>
+    <span className="inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2 py-0.5 text-xs font-medium text-gray-700 whitespace-nowrap">
+      <span className={`h-1.5 w-1.5 rounded-full ${PAYMENT_DOTS[status] ?? 'bg-gray-400'}`} aria-hidden="true" />
       {PAYMENT_LABELS[status] ?? status}
     </span>
   )
